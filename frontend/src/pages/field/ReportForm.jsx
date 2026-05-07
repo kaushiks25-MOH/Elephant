@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 
 export default function ReportForm() {
   const [count, setCount] = useState(1);
+  const [elephantType, setElephantType] = useState('');
   const [severity, setSeverity] = useState('LOW');
   const [notes, setNotes] = useState('');
   const [image, setImage] = useState(null);
@@ -63,7 +64,7 @@ export default function ReportForm() {
     setSubmitting(true);
     
     try {
-      await submitReport(count, severity, notes, location.lat, location.lng, image);
+      await submitReport(count, severity, notes, location.lat, location.lng, image, elephantType);
       setSuccess(true);
       setTimeout(() => {
         navigate('/field');
@@ -139,6 +140,45 @@ export default function ReportForm() {
           {locationError && (
             <p className="text-red-500 text-xs mt-3 flex items-center font-medium bg-red-50 p-2 rounded-lg border border-red-100"><AlertCircle size={14} className="mr-1.5"/> {locationError}</p>
           )}
+        </div>
+
+        {/* Elephant Type Selector */}
+        <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)]">
+          <label className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2 mb-4 text-base">
+            <span className="relative flex h-3 w-3 mr-1"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-elephant-amber)] opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--color-elephant-amber)]"></span></span>
+            Elephant Type
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { id: 'bull',      emoji: '🐘', label: 'Bull',             desc: 'Large solitary male' },
+              { id: 'malegroup', emoji: '🐘', label: 'Male Group',        desc: 'Two or more bulls' },
+              { id: 'femcalf',   emoji: '🐘', label: 'Female with Calf', desc: 'Mother & Baby' },
+              { id: 'herd',      emoji: '🐘', label: 'Elephant Group',    desc: 'Mixed herd' },
+              { id: 'lonecow',   emoji: '🐘', label: 'Lone Cow',          desc: 'Solitary Female' },
+              { id: 'cow',       emoji: '🐘', label: 'Cow',               desc: 'Generic Female' },
+              { id: 'unknown',   emoji: '❓', label: 'Unidentified',      desc: 'Unclear view' },
+            ].map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setElephantType(t.id)}
+                className={`relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+                  elephantType === t.id
+                    ? 'border-[var(--color-elephant-amber)] bg-[#fffcf5] shadow-md scale-[1.02]'
+                    : 'border-[var(--color-elephant-border)] bg-white hover:border-[var(--color-elephant-amber)]/50'
+                }`}
+              >
+                {elephantType === t.id && (
+                  <span className="absolute top-2 right-2 w-4 h-4 bg-[var(--color-elephant-amber)] rounded-full flex items-center justify-center text-white text-[8px] font-black">✓</span>
+                )}
+                <span className="text-3xl">{t.emoji}</span>
+                <div className="text-center">
+                  <p className="text-sm font-bold text-[var(--color-elephant-coffee)]">{t.label}</p>
+                  <p className="text-[10px] text-[var(--color-elephant-muted)] mt-0.5">{t.desc}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Details Section */}
