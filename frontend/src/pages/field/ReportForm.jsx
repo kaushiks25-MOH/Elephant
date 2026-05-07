@@ -108,14 +108,14 @@ export default function ReportForm() {
       <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] flex flex-col items-center justify-center p-6 text-center">
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mb-6 bg-white p-6 rounded-full shadow-lg border border-[var(--color-elephant-border)]">
           <CheckCircle className="h-20 w-20 text-[var(--color-elephant-moss)]" />
-        </motion.div>
+         </motion.div>
         <h2 className="text-3xl font-[family-name:var(--font-playfair)] font-black text-[var(--color-elephant-coffee)] mb-2">Report Submitted</h2>
-        <p className="text-[var(--color-elephant-muted)] font-medium mb-10">Data has been securely sent to HQ.</p>
+        <p className="text-[var(--color-elephant-muted)] font-medium mb-10">Thank you. Your sighting has been sent to the monitoring centre.</p>
         <button 
-          onClick={() => navigate('/field')}
+          onClick={() => window.location.reload()}
           className="bg-[var(--color-elephant-coffee)] hover:bg-[var(--color-elephant-amber)] text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-[var(--color-elephant-coffee)]/20 w-full max-w-xs transition-colors"
         >
-          Return to Dashboard
+          File Another Sighting
         </button>
       </div>
     );
@@ -125,15 +125,12 @@ export default function ReportForm() {
     <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] text-[var(--color-elephant-text)] pb-20">
       
       {/* App Bar */}
-      <div className="bg-[var(--color-elephant-coffee)] text-white px-4 py-4 shadow-md flex items-center gap-3 sticky top-0 z-10 border-b border-[#E8A82A]/20">
-        <button onClick={() => navigate('/field')} className="p-2 hover:bg-white/10 rounded-lg transition-colors bg-white/5 border border-white/10">
-          <ArrowLeft size={20} />
-        </button>
-        <div className="flex items-center gap-3 ml-2">
+      <div className="bg-[var(--color-elephant-coffee)] text-white px-4 py-6 shadow-md flex items-center justify-center sticky top-0 z-10 border-b border-[#E8A82A]/20">
+        <div className="flex items-center gap-3">
           <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-8 h-8 flex items-center justify-center text-sm shadow-lg border border-[#E8A82A]/40">
             🐘
           </div>
-          <h1 className="text-lg font-[family-name:var(--font-playfair)] font-bold tracking-tight text-[var(--color-elephant-gold)]">New Sighting</h1>
+          <h1 className="text-xl font-[family-name:var(--font-playfair)] font-bold tracking-tight text-[var(--color-elephant-gold)]">Elephant Sighting Portal</h1>
         </div>
       </div>
 

@@ -50,7 +50,6 @@ function MapUpdater({ center }) {
 }
 
 export default function HqDashboard() {
-  const [user, setUser] = useState(null);
   const [stats, setStats] = useState({ totalReports: 0, activeAlerts: 0, highSeverity: 0 });
   const [reports, setReports] = useState([]);
   const [alerts, setAlerts] = useState([]);
@@ -79,9 +78,6 @@ export default function HqDashboard() {
   };
 
   useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) setUser(JSON.parse(userStr));
-    
     loadData();
 
     const channel = supabase
@@ -89,7 +85,7 @@ export default function HqDashboard() {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, payload => {
         supabase
           .from('reports')
-          .select('*, users!inner(name, range_division)')
+          .select('*')
           .eq('id', payload.new.id)
           .single()
           .then(({ data: newReport }) => {
@@ -97,8 +93,8 @@ export default function HqDashboard() {
             
             const formattedReport = {
               ...newReport,
-              officer_name: newReport.users.name,
-              range_division: newReport.users.range_division
+              officer_name: 'Public Entry',
+              range_division: 'Unassigned'
             };
 
             if (Notification.permission === 'granted' && formattedReport.severity === 'HIGH') {
