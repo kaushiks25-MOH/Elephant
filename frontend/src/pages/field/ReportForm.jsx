@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, MapPin, CheckCircle, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { Camera, MapPin, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { submitReport } from '../../lib/api';
 import { motion } from 'framer-motion';
 
@@ -27,7 +27,6 @@ export default function ReportForm() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Auto-fetch GPS on component mount
   useEffect(() => {
     fetchLocation();
   }, []);
@@ -66,11 +65,11 @@ export default function ReportForm() {
     
     if (totalCount === 0) {
       alert('Please specify at least one elephant sighting');
-      setSubmitting(false);
       return;
     }
 
-    // Build a summary of types for the notes
+    setSubmitting(true);
+    
     const elephantTypes = [
       { id: 'bull', label: 'Bull' },
       { id: 'malegroup', label: 'Male Group' },
@@ -89,12 +88,8 @@ export default function ReportForm() {
     const finalNotes = typeSummary ? `[Types: ${typeSummary}] ${notes}` : notes;
     
     try {
-      await submitReport(totalCount, severity, finalNotes, location.lat, location.lng, image);
+      await submitReport(totalCount, severity, finalNotes, location?.lat, location?.lng, image);
       setSuccess(true);
-      setTimeout(() => {
-        navigate('/field');
-      }, 2000);
-      
     } catch (error) {
       console.error("Submit Error:", error);
       alert('Failed to submit report: ' + (error.message || 'Unknown error'));
@@ -105,15 +100,15 @@ export default function ReportForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] flex flex-col items-center justify-center p-6 text-center">
-        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mb-6 bg-white p-6 rounded-full shadow-lg border border-[var(--color-elephant-border)]">
-          <CheckCircle className="h-20 w-20 text-[var(--color-elephant-moss)]" />
+      <div className="min-h-screen bg-[var(--color-elephant-coffee)] font-[family-name:var(--font-dm)] flex flex-col items-center justify-center p-6 text-center text-white">
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mb-6 bg-white/5 p-8 rounded-full shadow-2xl border border-white/10">
+          <CheckCircle className="h-24 w-24 text-[var(--color-elephant-gold)]" />
          </motion.div>
-        <h2 className="text-3xl font-[family-name:var(--font-playfair)] font-black text-[var(--color-elephant-coffee)] mb-2">Report Submitted</h2>
-        <p className="text-[var(--color-elephant-muted)] font-medium mb-10">Thank you. Your sighting has been sent to the monitoring centre.</p>
+        <h2 className="text-4xl font-[family-name:var(--font-playfair)] font-black text-white mb-2 tracking-tight">Report Received</h2>
+        <p className="text-white/40 font-medium mb-12 max-w-xs">Your information has been logged in the Geographic Monitoring System.</p>
         <button 
           onClick={() => window.location.reload()}
-          className="bg-[var(--color-elephant-coffee)] hover:bg-[var(--color-elephant-amber)] text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-[var(--color-elephant-coffee)]/20 w-full max-w-xs transition-colors"
+          className="bg-[var(--color-elephant-gold)] hover:bg-white text-[var(--color-elephant-coffee)] px-10 py-4 rounded-2xl font-black shadow-2xl shadow-[var(--color-elephant-gold)]/20 w-full max-w-xs transition-all active:scale-95"
         >
           File Another Sighting
         </button>
@@ -122,94 +117,91 @@ export default function ReportForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] text-[var(--color-elephant-text)] pb-20">
-      
+    <div className="min-h-screen bg-[var(--color-elephant-coffee)] font-[family-name:var(--font-dm)] text-white pb-24">
       {/* App Bar */}
-      <div className="bg-[var(--color-elephant-coffee)] text-white px-4 py-6 shadow-md flex items-center justify-center sticky top-0 z-10 border-b border-[#E8A82A]/20">
-        <div className="flex items-center gap-3">
-          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-8 h-8 flex items-center justify-center text-sm shadow-lg border border-[#E8A82A]/40">
+      <div className="bg-[#1a0f0a] text-white px-4 py-8 shadow-xl flex items-center justify-center sticky top-0 z-50 border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-2xl w-10 h-10 flex items-center justify-center text-xl shadow-lg border border-[#E8A82A]/40">
             🐘
           </div>
-          <h1 className="text-xl font-[family-name:var(--font-playfair)] font-bold tracking-tight text-[var(--color-elephant-gold)]">Elephant Sighting Portal</h1>
+          <h1 className="text-2xl font-[family-name:var(--font-playfair)] font-black tracking-tight text-[var(--color-elephant-gold)]">Sighting Portal</h1>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-4 max-w-lg mx-auto space-y-6 mt-4">
+      <div className="max-w-md mx-auto p-5 mt-6 space-y-6">
         
-        {/* GPS Section */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)]">
-          <div className="flex justify-between items-center mb-4">
-            <label className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2">
-              <MapPin className="text-[var(--color-elephant-amber)]" size={18} /> GPS Location <span className="text-red-500">*</span>
+        {/* Location Display */}
+        <div className="bg-[#24150e] p-6 rounded-3xl shadow-xl border border-white/5">
+          <div className="flex items-center justify-between mb-4">
+            <label className="font-bold text-white/50 text-xs uppercase tracking-widest flex items-center gap-2">
+              <MapPin size={14} className="text-[var(--color-elephant-gold)]" /> Current Coordinates
             </label>
-            <button type="button" onClick={fetchLocation} className="text-[10px] font-bold tracking-widest uppercase text-[var(--color-elephant-coffee)] bg-[var(--color-elephant-amber)]/20 hover:bg-[var(--color-elephant-amber)] hover:text-white px-3 py-1.5 rounded-lg transition-colors">
-              Refresh
-            </button>
+            <button onClick={fetchLocation} className="text-[var(--color-elephant-gold)] text-xs font-bold hover:underline">Recalibrate</button>
           </div>
-          
           {location ? (
-            <div className="bg-[#f4f7f6] p-4 rounded-xl border border-[var(--color-elephant-border)] shadow-inner">
-              <p className="text-sm font-mono text-[var(--color-elephant-moss)] font-bold tracking-wider">
-                LAT <span className="text-[var(--color-elephant-coffee)] ml-2">{location.lat.toFixed(6)}</span><br/>
-                LNG <span className="text-[var(--color-elephant-coffee)] ml-2">{location.lng.toFixed(6)}</span>
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="flex-1 bg-black/20 p-4 rounded-2xl border border-white/5">
+                <p className="text-2xl font-[family-name:var(--font-playfair)] font-black text-white">{location.lat.toFixed(5)}°N</p>
+                <p className="text-[10px] text-white/30 uppercase mt-1">Latitude</p>
+              </div>
+              <div className="flex-1 bg-black/20 p-4 rounded-2xl border border-white/5">
+                <p className="text-2xl font-[family-name:var(--font-playfair)] font-black text-white">{location.lng.toFixed(5)}°E</p>
+                <p className="text-[10px] text-white/30 uppercase mt-1">Longitude</p>
+              </div>
             </div>
           ) : (
-            <div className="bg-[var(--color-elephant-cream)] p-4 rounded-xl flex items-center justify-center text-[var(--color-elephant-muted)] text-sm font-medium border border-[var(--color-elephant-border)] border-dashed">
-              <Loader2 className="animate-spin mr-2 text-[var(--color-elephant-amber)]" size={16} /> Fetching coordinates...
+            <div className="flex items-center gap-3 p-4 bg-red-900/10 border border-red-900/30 rounded-2xl">
+              <Loader2 className="animate-spin text-red-500" size={20} />
+              <p className="text-sm font-medium text-red-400">{locationError || 'Syncing GPS Satellite...'}</p>
             </div>
-          )}
-          {locationError && (
-            <p className="text-red-500 text-xs mt-3 flex items-center font-medium bg-red-50 p-2 rounded-lg border border-red-100"><AlertCircle size={14} className="mr-1.5"/> {locationError}</p>
           )}
         </div>
 
-        {/* Elephant Type Selector with Individual Counts */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)]">
-          <label className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2 mb-4 text-base">
-            <span className="relative flex h-3 w-3 mr-1"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-elephant-amber)] opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--color-elephant-amber)]"></span></span>
+        {/* Elephant Type Grid */}
+        <div className="bg-[#24150e] p-6 rounded-3xl shadow-xl border border-white/5">
+          <label className="font-bold text-white/50 text-xs uppercase tracking-widest flex items-center gap-2 mb-6">
+            <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-elephant-gold)] opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-elephant-gold)]"></span></span>
             Identify & Count
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {[
-              { id: 'bull',      emoji: '🐘', label: 'Bull',             desc: 'Large solitary male' },
-              { id: 'malegroup', emoji: '🐘', label: 'Male Group',        desc: 'Two or more bulls' },
-              { id: 'femcalf',   emoji: '🐘', label: 'Female with Calf', desc: 'Mother & Baby' },
-              { id: 'herd',      emoji: '🐘', label: 'Elephant Group',    desc: 'Mixed herd' },
+              { id: 'bull',      emoji: '🐘', label: 'Bull',             desc: 'Solitary Male' },
+              { id: 'malegroup', emoji: '🐘', label: 'Male Group',        desc: 'Bachelor Herd' },
+              { id: 'femcalf',   emoji: '🐘', label: 'Fem + Calf',      desc: 'Nursery Group' },
+              { id: 'herd',      emoji: '🐘', label: 'Mixed Group',      desc: 'Large Herd' },
               { id: 'lonecow',   emoji: '🐘', label: 'Lone Cow',          desc: 'Solitary Female' },
-              { id: 'cow',       emoji: '🐘', label: 'Cow',               desc: 'Generic Female' },
-              { id: 'unknown',   emoji: '❓', label: 'Unidentified',      desc: 'Unclear view' },
+              { id: 'cow',       emoji: '🐘', label: 'Cow Group',         desc: 'Female Group' },
+              { id: 'unknown',   emoji: '❓', label: 'Unknown',           desc: 'Low visibility' },
             ].map((t) => (
               <div
                 key={t.id}
-                className={`relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+                className={`relative flex flex-col items-center gap-2 p-5 rounded-3xl border-2 transition-all ${
                   typeCounts[t.id] > 0
-                    ? 'border-[var(--color-elephant-amber)] bg-[#fffcf5] shadow-md'
-                    : 'border-[var(--color-elephant-border)] bg-white'
+                    ? 'border-[var(--color-elephant-gold)] bg-[#2d1e16] shadow-2xl scale-[1.02]'
+                    : 'border-white/5 bg-black/10'
                 }`}
               >
                 <span className="text-3xl">{t.emoji}</span>
                 <div className="text-center">
-                  <p className="text-sm font-bold text-[var(--color-elephant-coffee)]">{t.label}</p>
-                  <p className="text-[10px] text-[var(--color-elephant-muted)] mt-0.5">{t.desc}</p>
+                  <p className="text-sm font-bold text-white leading-tight">{t.label}</p>
+                  <p className="text-[9px] text-white/30 uppercase mt-0.5 tracking-tighter">{t.desc}</p>
                 </div>
                 
-                {/* Count Controls Inside Card */}
-                <div className="flex items-center gap-3 mt-3 bg-[var(--color-elephant-cream)] p-1.5 rounded-xl border border-[var(--color-elephant-border)]">
+                <div className="flex items-center gap-3 mt-4 bg-black/20 p-1.5 rounded-2xl border border-white/5">
                   <button 
                     type="button"
                     onClick={() => setTypeCounts(prev => ({ ...prev, [t.id]: Math.max(0, prev[t.id] - 1) }))}
-                    className="w-8 h-8 rounded-lg bg-white shadow-sm border border-[var(--color-elephant-border)] text-[var(--color-elephant-coffee)] font-black flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-white font-black flex items-center justify-center active:scale-75 transition-all"
                   >
                     -
                   </button>
-                  <span className="text-sm font-black w-4 text-center text-[var(--color-elephant-coffee)]">
+                  <span className="text-lg font-black w-4 text-center text-[var(--color-elephant-gold)]">
                     {typeCounts[t.id]}
                   </span>
                   <button 
                     type="button"
                     onClick={() => setTypeCounts(prev => ({ ...prev, [t.id]: prev[t.id] + 1 }))}
-                    className="w-8 h-8 rounded-lg bg-[var(--color-elephant-coffee)] shadow-sm border border-[var(--color-elephant-coffee)] text-[var(--color-elephant-amber)] font-black flex items-center justify-center active:scale-90 transition-transform"
+                    className="w-10 h-10 rounded-xl bg-[var(--color-elephant-gold)] text-[var(--color-elephant-coffee)] font-black flex items-center justify-center active:scale-75 transition-all"
                   >
                     +
                   </button>
@@ -219,102 +211,75 @@ export default function ReportForm() {
           </div>
         </div>
 
-        {/* Details Section */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)] space-y-6">
+        {/* Severity & Notes */}
+        <div className="bg-[#24150e] p-6 rounded-3xl shadow-xl border border-white/5 space-y-8">
           <div>
-            <label className="block text-sm font-bold text-[var(--color-elephant-coffee)] mb-3">Severity / Threat Level</label>
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-4">Threat Assessment</label>
             <div className="grid grid-cols-3 gap-3">
-              <button
-                type="button"
-                onClick={() => setSeverity('LOW')}
-                className={`py-3 rounded-xl text-sm font-bold tracking-wide transition-all border-2 ${severity === 'LOW' ? 'bg-green-50 border-green-500 text-green-700 shadow-sm' : 'bg-white border-[var(--color-elephant-border)] text-[var(--color-elephant-muted)] hover:border-gray-300'}`}
-              >
-                Low
-              </button>
-              <button
-                type="button"
-                onClick={() => setSeverity('MEDIUM')}
-                className={`py-3 rounded-xl text-sm font-bold tracking-wide transition-all border-2 ${severity === 'MEDIUM' ? 'bg-[#fffcf5] border-[#E8A82A] text-[#B8860B] shadow-sm' : 'bg-white border-[var(--color-elephant-border)] text-[var(--color-elephant-muted)] hover:border-gray-300'}`}
-              >
-                Medium
-              </button>
-              <button
-                type="button"
-                onClick={() => setSeverity('HIGH')}
-                className={`py-3 rounded-xl text-sm font-bold tracking-wide transition-all border-2 ${severity === 'HIGH' ? 'bg-red-50 border-red-500 text-red-700 shadow-sm' : 'bg-white border-[var(--color-elephant-border)] text-[var(--color-elephant-muted)] hover:border-gray-300'}`}
-              >
-                High
-              </button>
+              {['LOW', 'MEDIUM', 'HIGH'].map(s => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSeverity(s)}
+                  className={`py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border-2 transition-all ${
+                    severity === s
+                      ? s === 'HIGH' ? 'bg-red-600 border-red-500 shadow-lg shadow-red-900/40 text-white scale-105' :
+                        s === 'MEDIUM' ? 'bg-[var(--color-elephant-amber)] border-[var(--color-elephant-gold)] shadow-lg shadow-orange-900/40 text-white scale-105' :
+                        'bg-[var(--color-elephant-moss)] border-[var(--color-elephant-sage)] shadow-lg shadow-green-900/40 text-white scale-105'
+                      : 'bg-black/10 border-white/5 text-white/40'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
             </div>
-            <p className="text-[11px] font-medium text-[var(--color-elephant-muted)] mt-2">High severity alerts HQ immediately.</p>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-[var(--color-elephant-coffee)] mb-2">Additional Notes</label>
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-4">Observation Notes</label>
             <textarea
-              rows={3}
+              className="w-full bg-black/20 border border-white/5 rounded-2xl p-5 text-sm text-white focus:outline-none focus:border-[var(--color-elephant-gold)] focus:ring-1 focus:ring-[var(--color-elephant-gold)] transition-all min-h-[120px] placeholder:text-white/10"
+              placeholder="Behavior, direction of movement, crops damaged..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g., Moving towards village..."
-              className="w-full bg-[var(--color-elephant-cream)] border border-[var(--color-elephant-border)] rounded-xl p-4 text-sm focus:ring-2 focus:ring-[var(--color-elephant-amber)] focus:border-[var(--color-elephant-amber)] outline-none resize-none transition-all placeholder:text-[var(--color-elephant-muted)]/50"
-            ></textarea>
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-4">Field Evidence (Photo)</label>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex-1 flex flex-col items-center justify-center gap-3 p-8 border-2 border-dashed border-white/10 rounded-3xl hover:border-[var(--color-elephant-gold)]/50 hover:bg-white/5 transition-all relative overflow-hidden group"
+              >
+                {preview ? (
+                  <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                ) : (
+                  <Camera size={32} className="text-white/20 group-hover:text-[var(--color-elephant-gold)] transition-colors" />
+                )}
+                <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white z-10">
+                  {preview ? 'Retake Photo' : 'Capture Image'}
+                </span>
+                <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" capture="environment" className="hidden" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Photo Section */}
-        <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)]">
-          <label className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2 mb-4">
-            <Camera className="text-[var(--color-elephant-amber)]" size={18} /> Evidence Photo
-          </label>
-          
-          <input 
-            type="file" 
-            accept="image/*" 
-            capture="environment" 
-            ref={fileInputRef} 
-            onChange={handleImageChange}
-            className="hidden" 
-          />
-          
-          {preview ? (
-            <div className="relative group rounded-xl overflow-hidden shadow-sm border border-[var(--color-elephant-border)]">
-              <img src={preview} alt="Preview" className="w-full h-56 object-cover" />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <button 
-                  type="button" 
-                  onClick={() => fileInputRef.current.click()}
-                  className="bg-white text-[var(--color-elephant-coffee)] px-6 py-2.5 rounded-lg shadow-lg font-bold text-sm hover:scale-105 transition-transform"
-                >
-                  Retake Photo
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button 
-              type="button"
-              onClick={() => fileInputRef.current.click()}
-              className="w-full h-40 bg-[var(--color-elephant-cream)] border-2 border-dashed border-[var(--color-elephant-border)] rounded-xl flex flex-col items-center justify-center text-[var(--color-elephant-muted)] hover:bg-[#f4f7f6] hover:border-[var(--color-elephant-amber)] transition-all"
-            >
-              <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3">
-                <Camera size={20} className="text-[var(--color-elephant-amber)]" />
-              </div>
-              <span className="text-sm font-bold">Tap to open Camera/Gallery</span>
-            </button>
-          )}
-        </div>
-
-        <button 
-          type="submit" 
-          disabled={submitting || !location}
-          className="w-full bg-[var(--color-elephant-coffee)] hover:bg-[#3d2216] active:bg-black text-white py-5 rounded-2xl font-bold shadow-xl shadow-[var(--color-elephant-coffee)]/20 flex items-center justify-center disabled:opacity-50 disabled:shadow-none transition-all text-lg mt-8 border border-[#5C3D2E]"
+        <button
+          onClick={handleSubmit}
+          disabled={submitting}
+          className="w-full bg-[var(--color-elephant-gold)] hover:bg-white text-[var(--color-elephant-coffee)] py-6 rounded-3xl font-black text-lg shadow-2xl shadow-[var(--color-elephant-gold)]/30 flex items-center justify-center gap-3 transition-all active:scale-[0.98] disabled:opacity-50 disabled:grayscale"
         >
           {submitting ? (
-            <><Loader2 className="animate-spin mr-3 text-[var(--color-elephant-amber)]" size={24} /> Processing...</>
+            <><Loader2 className="animate-spin" size={24} /> Syncing Data...</>
           ) : (
-            'Submit Sighting Report'
+            <>Transmit Report</>
           )}
         </button>
-      </form>
+
+      </div>
     </div>
   );
 }

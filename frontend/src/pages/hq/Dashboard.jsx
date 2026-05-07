@@ -139,10 +139,10 @@ export default function HqDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] text-[var(--color-elephant-text)]">
+    <div className="min-h-screen bg-[var(--color-elephant-coffee)] font-[family-name:var(--font-dm)] text-white">
       
       {/* Mobile Header */}
-      <div className="md:hidden sticky top-0 z-50 bg-[var(--color-elephant-coffee)] text-white flex items-center justify-between p-4 shadow-md border-b border-[#E8A82A]/20">
+      <div className="md:hidden sticky top-0 z-50 bg-[#1a0f0a] text-white flex items-center justify-between p-4 shadow-md border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-10 h-10 flex items-center justify-center text-xl shadow-lg border border-[#E8A82A]/40">
             🐘
@@ -174,7 +174,7 @@ export default function HqDashboard() {
       </AnimatePresence>
 
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-[var(--color-elephant-coffee)] text-white flex-col shadow-2xl z-20 border-r border-[#E8A82A]/20">
+      <div className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-[#1a0f0a] text-white flex-col shadow-2xl z-20 border-r border-white/10">
         <div className="p-6 border-b border-white/10 flex items-center gap-3">
           <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-2xl w-14 h-14 flex items-center justify-center text-3xl shadow-lg border border-[#E8A82A]/40">
             🐘
@@ -192,16 +192,17 @@ export default function HqDashboard() {
 
       {/* Main Content Area */}
       <div className="md:pl-64 flex-1 min-h-screen relative overflow-hidden">
-        <div className="fixed top-[-100px] right-[-100px] p-8 opacity-[0.03] pointer-events-none text-[400px] leading-none mix-blend-multiply">🐘</div>
+        {/* Background Decorative Element */}
+        <div className="fixed bottom-[-100px] right-[-100px] p-8 opacity-[0.03] pointer-events-none text-[500px] leading-none text-white">🐘</div>
         
         <div className="p-4 md:p-8 relative z-10 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 bg-white/50 backdrop-blur-sm p-6 rounded-2xl border border-[var(--color-elephant-border)] shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-xl">
             <div>
-              <div className="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--color-elephant-amber)] mb-1">Overview</div>
-              <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-[var(--color-elephant-coffee)] tracking-tight">Conflict Monitoring</h2>
+              <div className="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--color-elephant-gold)] mb-1">Live Intelligence</div>
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white tracking-tight">Conflict Monitoring</h2>
             </div>
-            <button onClick={loadData} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-[var(--color-elephant-coffee)] bg-white border border-[var(--color-elephant-border)] rounded-xl hover:bg-[var(--color-elephant-amber)] hover:border-[var(--color-elephant-gold)] hover:text-white hover:shadow-md transition-all font-medium">
+            <button onClick={loadData} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-white bg-white/10 border border-white/20 rounded-xl hover:bg-[var(--color-elephant-amber)] hover:border-[var(--color-elephant-gold)] hover:text-white transition-all font-medium backdrop-blur-sm">
               <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
               <span>Refresh Data</span>
             </button>
@@ -209,48 +210,48 @@ export default function HqDashboard() {
 
           {/* KPI Stats Row */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5 mb-8">
-            <motion.div whileHover={{ y: -4 }} className="bg-gradient-to-br from-white to-[#f4f7f6] border border-[var(--color-elephant-border)] rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-blue-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--color-elephant-muted)] mb-3 flex items-center gap-2"><FileText size={14} className="text-blue-500"/> Total Sightings</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-[var(--color-elephant-coffee)] leading-none mb-1">{stats.totalReports}</div>
-              <div className="text-[11px] text-[var(--color-elephant-muted)]/80 mt-2">All time reports</div>
+              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><FileText size={14} className="text-blue-400"/> Total Sightings</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">{stats.totalReports}</div>
+              <div className="text-[11px] text-white/20 mt-2">All time reports</div>
             </motion.div>
             
-            <motion.div whileHover={{ y: -4 }} className="bg-gradient-to-br from-white to-[#f4f7f6] border border-[var(--color-elephant-border)] rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-amber)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--color-elephant-muted)] mb-3 flex items-center gap-2"><Bell size={14} className="text-[var(--color-elephant-amber)]"/> Active Alerts</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-[var(--color-elephant-coffee)] leading-none mb-1">{stats.activeAlerts}</div>
-              <div className="text-[11px] text-[var(--color-elephant-muted)]/80 mt-2">Requires attention</div>
+              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><Bell size={14} className="text-[var(--color-elephant-amber)]"/> Active Alerts</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">{stats.activeAlerts}</div>
+              <div className="text-[11px] text-white/20 mt-2">Requires attention</div>
             </motion.div>
 
-            <motion.div whileHover={{ y: -4 }} className="bg-gradient-to-br from-white to-[#fff5f5] border border-red-100 rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group col-span-2 md:col-span-1 lg:col-span-1">
+            <motion.div whileHover={{ y: -4 }} className="bg-[#2a0f0a] border border-red-900/30 rounded-2xl p-5 relative overflow-hidden shadow-lg group col-span-2 md:col-span-1 lg:col-span-1">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-red-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-red-600 mb-3 flex items-center gap-2"><AlertTriangle size={14}/> High Severity</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-red-700 leading-none mb-1">{stats.highSeverity}</div>
-              <div className="text-[11px] text-red-500/80 mt-2">Critical incidents</div>
+              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-red-400 mb-3 flex items-center gap-2"><AlertTriangle size={14}/> High Severity</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-red-500 leading-none mb-1">{stats.highSeverity}</div>
+              <div className="text-[11px] text-red-500/30 mt-2">Critical incidents</div>
             </motion.div>
             
-            <motion.div whileHover={{ y: -4 }} className="bg-gradient-to-br from-white to-[#f4f7f6] border border-[var(--color-elephant-border)] rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-moss)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--color-elephant-muted)] mb-3">Lone Male</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-[var(--color-elephant-coffee)] leading-none mb-1">1,978</div>
-              <div className="text-[11px] text-[var(--color-elephant-muted)]/80 mt-2">Most common type</div>
+              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3">Lone Male</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">1,978</div>
+              <div className="text-[11px] text-white/20 mt-2">Most common type</div>
             </motion.div>
             
-            <motion.div whileHover={{ y: -4 }} className="bg-gradient-to-br from-white to-[#f4f7f6] border border-[var(--color-elephant-border)] rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-sage)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--color-elephant-muted)] mb-3">Female + Calf</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-[var(--color-elephant-coffee)] leading-none mb-1">637</div>
-              <div className="text-[11px] text-[var(--color-elephant-muted)]/80 mt-2">Vulnerable groups</div>
+              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3">Female + Calf</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">637</div>
+              <div className="text-[11px] text-white/20 mt-2">Vulnerable groups</div>
             </motion.div>
           </div>
 
           {/* Charts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div className="lg:col-span-2 bg-white border border-[var(--color-elephant-border)] rounded-3xl p-6 md:p-8 shadow-sm">
+            <div className="lg:col-span-2 bg-[#24150e] border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl">
               <div className="mb-6">
-                <h3 className="font-bold text-xl md:text-2xl text-[var(--color-elephant-coffee)] mb-1 tracking-tight">Monthly Incident Trend</h3>
-                <div className="text-xs font-medium text-[var(--color-elephant-muted)]">2025 peak analysis</div>
+                <h3 className="font-bold text-xl md:text-2xl text-white mb-1 tracking-tight">Monthly Incident Trend</h3>
+                <div className="text-xs font-medium text-white/40">2025 peak analysis</div>
               </div>
               <div className="h-60 md:h-72 w-full">
                 <Bar 
@@ -267,16 +268,19 @@ export default function HqDashboard() {
                   options={{
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false }, tooltip: { padding: 12, cornerRadius: 8 } },
-                    scales: { x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', weight: 'bold' } } }, y: { grid: { color: 'rgba(0,0,0,0.04)' }, border: { display: false } } }
+                    scales: { 
+                      x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'DM Sans', weight: 'bold' } } }, 
+                      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)' }, border: { display: false } } 
+                    }
                   }}
                 />
               </div>
             </div>
             
-            <div className="bg-white border border-[var(--color-elephant-border)] rounded-3xl p-6 md:p-8 shadow-sm">
+            <div className="bg-[#24150e] border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl">
               <div className="mb-6 text-center lg:text-left">
-                <h3 className="font-bold text-xl md:text-2xl text-[var(--color-elephant-coffee)] mb-1 tracking-tight">Elephant Type</h3>
-                <div className="text-xs font-medium text-[var(--color-elephant-muted)]">Group breakdown</div>
+                <h3 className="font-bold text-xl md:text-2xl text-white mb-1 tracking-tight">Elephant Type</h3>
+                <div className="text-xs font-medium text-white/40">Group breakdown</div>
               </div>
               <div className="h-60 md:h-72 w-full relative flex items-center justify-center">
                 <Doughnut 
@@ -284,19 +288,19 @@ export default function HqDashboard() {
                     labels: ['Lone Male','Female Group','Male Group','Female+Calf','Single Female'],
                     datasets: [{
                       data: [1978,1219,1035,637,154],
-                      backgroundColor: ['#E53935','#27AE60','#E67E22','#2980B9','#8E44AD'],
-                      borderWidth: 3, borderColor: '#ffffff',
+                      backgroundColor: ['#C17F3A','#27AE60','#E67E22','#2980B9','#8E44AD'],
+                      borderWidth: 0,
                       hoverOffset: 4
                     }]
                   }}
                   options={{
-                    responsive: true, maintainAspectRatio: false, cutout: '70%',
+                    responsive: true, maintainAspectRatio: false, cutout: '75%',
                     plugins: { legend: { display: false }, tooltip: { padding: 12, cornerRadius: 8 } }
                   }}
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-3xl font-black text-[var(--color-elephant-coffee)] font-[family-name:var(--font-playfair)]">4k+</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-elephant-muted)]">Total</span>
+                  <span className="text-3xl font-black text-white font-[family-name:var(--font-playfair)]">4k+</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Total</span>
                 </div>
               </div>
             </div>
@@ -304,13 +308,13 @@ export default function HqDashboard() {
 
           {/* Map & Alerts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-            <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-[var(--color-elephant-border)] overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
-              <div className="p-5 border-b border-[var(--color-elephant-border)] flex flex-wrap justify-between items-center bg-gradient-to-r from-[var(--color-elephant-cream)] to-white gap-4">
-                <h3 className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
-                  <MapIcon size={18} className="text-[var(--color-elephant-amber)]"/> Live Incident Map
+            <div className="lg:col-span-2 bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
+              <div className="p-5 border-b border-white/5 flex flex-wrap justify-between items-center bg-white/5 backdrop-blur-sm gap-4">
+                <h3 className="font-bold text-white flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
+                  <MapIcon size={18} className="text-[var(--color-elephant-gold)]"/> Geographic Monitor
                 </h3>
               </div>
-              <div className="flex-1 relative z-0 bg-[#1a1a1a]">
+              <div className="flex-1 relative z-0 bg-[#0c0c0c]">
                 {reports.length > 0 ? (
                    <MapContainer center={mapCenterParams ? [mapCenterParams.lat, mapCenterParams.lng] : [reports[0].latitude || 11.1, reports[0].longitude || 77.0]} zoom={mapCenterParams ? 16 : 8} scrollWheelZoom={true} className="w-full h-full">
                     <TileLayer
@@ -325,50 +329,50 @@ export default function HqDashboard() {
                         icon={icons[report.severity]}
                       >
                         <Popup className="elephant-popup">
-                          <div className="w-48 font-[family-name:var(--font-dm)] p-1">
-                            <div className={`px-2.5 py-1.5 text-[10px] font-black uppercase tracking-widest text-white rounded-lg mb-3 inline-block shadow-sm ${report.severity === 'HIGH' ? 'bg-red-500' : report.severity === 'MEDIUM' ? 'bg-[#E8A82A]' : 'bg-green-500'}`}>
+                          <div className="w-48 font-[family-name:var(--font-dm)] p-1 text-white">
+                            <div className={`px-2.5 py-1.5 text-[10px] font-black uppercase tracking-widest text-white rounded-lg mb-3 inline-block shadow-sm ${report.severity === 'HIGH' ? 'bg-red-600' : report.severity === 'MEDIUM' ? 'bg-[#E8A82A]' : 'bg-green-600'}`}>
                               {report.severity} SEVERITY
                             </div>
-                            <p className="font-bold text-base mb-1 text-[var(--color-elephant-coffee)]">{report.elephant_count} Elephants</p>
-                            <p className="text-xs font-medium text-[var(--color-elephant-muted)] mb-1">Public Report</p>
-                            <p className="text-[10px] font-bold text-[var(--color-elephant-muted)]/60 mb-3">{new Date(report.created_at).toLocaleString()}</p>
-                            {report.notes && <p className="text-xs italic bg-[var(--color-elephant-ivory)] p-3 rounded-xl mb-3 border-l-4 border-[var(--color-elephant-amber)] text-[var(--color-elephant-text)]">"{report.notes}"</p>}
+                            <p className="font-bold text-base mb-1 text-black">{report.elephant_count} Elephants</p>
+                            <p className="text-xs font-medium text-gray-600 mb-1">Public Report</p>
+                            <p className="text-[10px] font-bold text-gray-400 mb-3">{new Date(report.created_at).toLocaleString()}</p>
+                            {report.notes && <p className="text-xs italic bg-gray-50 p-3 rounded-xl mb-3 border-l-4 border-[var(--color-elephant-amber)] text-gray-700">"{report.notes}"</p>}
                           </div>
                         </Popup>
                       </Marker>
                     ))}
                   </MapContainer>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/50 text-sm font-medium">
-                    {loading ? 'Initializing live map...' : 'No location data available'}
+                  <div className="w-full h-full flex items-center justify-center text-white/20 text-sm font-medium">
+                    {loading ? 'Booting Geo-intelligence...' : 'No location data available'}
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-sm border border-[var(--color-elephant-border)] overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
-              <div className="p-5 border-b border-red-100 bg-gradient-to-r from-red-50 to-white">
-                <h3 className="font-bold text-red-800 flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
-                  <Bell size={18} className="text-red-600 animate-pulse" /> Live Alerts Feed
+            <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
+              <div className="p-5 border-b border-red-900/30 bg-red-900/10">
+                <h3 className="font-bold text-red-400 flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
+                  <Bell size={18} className="text-red-500 animate-pulse" /> Critical Incidents
                 </h3>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white/[0.02] custom-scrollbar">
                 {alerts.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-[var(--color-elephant-muted)] py-8 text-sm gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center">
-                      <AlertTriangle size={24} className="text-gray-300"/>
+                  <div className="h-full flex flex-col items-center justify-center text-white/20 py-8 text-sm gap-3">
+                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+                      <AlertTriangle size={24} className="text-white/10"/>
                     </div>
                     No active high priority alerts.
                   </div>
                 ) : (
                   alerts.map(alert => (
-                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} key={alert.id} className="border-l-4 border-red-500 bg-red-50/40 hover:bg-red-50 p-4 rounded-r-2xl shadow-sm hover:shadow-md transition-all cursor-pointer group">
+                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} key={alert.id} className="border-l-4 border-red-600 bg-red-900/10 hover:bg-red-900/20 p-4 rounded-r-2xl shadow-lg transition-all cursor-pointer group">
                       <div className="flex justify-between items-start mb-2.5">
-                        <span className="text-[10px] font-black text-red-600 bg-red-100 px-2.5 py-1 rounded-md uppercase tracking-widest">New Alert</span>
-                        <span className="text-[10px] font-bold text-[var(--color-elephant-muted)] bg-white border border-gray-100 px-2 py-1 rounded-md shadow-sm">{new Date(alert.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        <span className="text-[10px] font-black text-red-400 bg-red-900/30 px-2.5 py-1 rounded-md uppercase tracking-widest border border-red-500/20">Active</span>
+                        <span className="text-[10px] font-bold text-white/40 bg-white/5 px-2 py-1 rounded-md">{new Date(alert.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                       </div>
-                      <p className="text-base font-bold text-[var(--color-elephant-coffee)] mt-1 tracking-tight">Sighting Alert</p>
-                      <p className="text-xs font-medium text-[var(--color-elephant-muted)] mt-2 flex items-center gap-1.5 group-hover:text-[var(--color-elephant-amber)] transition-colors">
+                      <p className="text-base font-bold text-white mt-1 tracking-tight">Sighting Alert</p>
+                      <p className="text-xs font-medium text-white/40 mt-2 flex items-center gap-1.5 group-hover:text-[var(--color-elephant-gold)] transition-colors">
                         <MapPin size={14}/> {alert.latitude?.toFixed(4)}, {alert.longitude?.toFixed(4)}
                       </p>
                     </motion.div>

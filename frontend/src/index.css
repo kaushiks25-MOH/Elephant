@@ -12,9 +12,9 @@
   --color-elephant-cream: #F8F3EC;
   --color-elephant-ivory: #FDFAF6;
   --color-elephant-charcoal: #1E1E1E;
-  --color-elephant-text: #2E2822;
-  --color-elephant-muted: #7A6F66;
-  --color-elephant-border: #E0D8CF;
+  --color-elephant-text: #F8F3EC;
+  --color-elephant-muted: #A89F96;
+  --color-elephant-border: rgba(255, 255, 255, 0.1);
 
   --color-forest-50: #f0fdf4;
   --color-forest-100: #dcfce7;
@@ -39,7 +39,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-elephant-ivory); 
+  background-color: var(--color-elephant-coffee); 
   color: var(--color-elephant-text);
   overflow-x: hidden;
   scroll-behavior: smooth;
