@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-elephant-coffee: #2C1810;
+  --color-elephant-bark: #5C3D2E;
+  --color-elephant-amber: #C17F3A;
+  --color-elephant-gold: #E8A82A;
+  --color-elephant-moss: #3D6B45;
+  --color-elephant-forest: #2A5235;
+  --color-elephant-sage: #7FB07A;
+  --color-elephant-mist: #D4E8D5;
+  --color-elephant-cream: #F8F3EC;
+  --color-elephant-ivory: #FDFAF6;
+  --color-elephant-charcoal: #1E1E1E;
+  --color-elephant-text: #2E2822;
+  --color-elephant-muted: #7A6F66;
+  --color-elephant-border: #E0D8CF;
+
+  --color-forest-50: #f0fdf4;
+  --color-forest-100: #dcfce7;
+  --color-forest-200: #bbf7d0;
+  --color-forest-300: #86efac;
+  --color-forest-400: #4ade80;
+  --color-forest-500: #22c55e;
+  --color-forest-600: #16a34a;
+  --color-forest-700: #15803d;
+  --color-forest-800: #166534;
+  --color-forest-900: #14532d;
+  --color-forest-950: #052e16;
+
+  --font-playfair: 'Playfair Display', serif;
+  --font-dm: 'DM Sans', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-elephant-ivory); 
+  color: var(--color-elephant-text);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Leaflet map styles */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  z-index: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-elephant-cream); }
+::-webkit-scrollbar-thumb { background: var(--color-elephant-amber); border-radius: 3px; }
