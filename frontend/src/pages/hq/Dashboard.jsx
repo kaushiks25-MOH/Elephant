@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X } from 'lucide-react';
+import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck } from 'lucide-react';
 import { fetchReports, fetchAnalytics, fetchActiveAlerts } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,7 +36,8 @@ const createCustomIcon = (color) => {
 const icons = {
   LOW: createCustomIcon('green'),
   MEDIUM: createCustomIcon('gold'),
-  HIGH: createCustomIcon('red')
+  HIGH: createCustomIcon('red'),
+  CLEAR: createCustomIcon('blue') // Icon for clearance
 };
 
 function MapUpdater({ center }) {
@@ -82,38 +83,13 @@ export default function HqDashboard() {
     const channel = supabase
       .channel('public:reports')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, payload => {
-        supabase
-          .from('reports')
-          .select('*')
-          .eq('id', payload.new.id)
-          .single()
-          .then(({ data: newReport }) => {
-            if (!newReport) return;
-            
-            const formattedReport = {
-              ...newReport,
-              officer_name: 'Public Entry',
-              range_division: 'Unassigned'
-            };
-
-            if (Notification.permission === 'granted' && formattedReport.severity === 'HIGH') {
-              new Notification('High Severity Elephant Alert!', {
-                body: `${formattedReport.elephant_count} elephants spotted in ${formattedReport.range_division}`,
-              });
-            }
-
-            setReports(prev => [formattedReport, ...prev]);
-            setStats(prev => ({
-              ...prev,
-              totalReports: prev.totalReports + 1,
-              activeAlerts: formattedReport.severity === 'HIGH' ? prev.activeAlerts + 1 : prev.activeAlerts,
-              highSeverity: formattedReport.severity === 'HIGH' ? prev.highSeverity + 1 : prev.highSeverity,
-            }));
-            
-            if (formattedReport.severity === 'HIGH') {
-              loadData(); 
-            }
+        loadData(); // Re-fetch everything on any change to ensure sync
+        
+        if (Notification.permission === 'granted' && payload.new.severity === 'HIGH') {
+          new Notification('Critical Elephant Alert!', {
+            body: `${payload.new.elephant_count} elephants reported. Check map immediately.`,
           });
+        }
       })
       .subscribe();
 
@@ -123,7 +99,7 @@ export default function HqDashboard() {
   }, []);
 
   const getAPIUrl = (path) => {
-    if (path.startsWith('http')) return path;
+    if (path && path.startsWith('http')) return path;
     return path;
   };
 
@@ -144,11 +120,9 @@ export default function HqDashboard() {
       {/* Mobile Header */}
       <div className="md:hidden sticky top-0 z-50 bg-[#1a0f0a] text-white flex items-center justify-between p-4 shadow-md border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-10 h-10 flex items-center justify-center text-xl shadow-lg border border-[#E8A82A]/40">
-            🐘
-          </div>
+          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-10 h-10 flex items-center justify-center text-xl shadow-lg border border-[#E8A82A]/40">🐘</div>
           <div>
-            <h1 className="font-[family-name:var(--font-playfair)] font-bold text-base leading-tight tracking-tight text-[var(--color-elephant-gold)]">AECRCMC</h1>
+            <h1 className="font-[family-name:var(--font-playfair)] font-bold text-base leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1>
             <p className="text-[9px] text-white/50 tracking-widest uppercase">HQ Dashboard</p>
           </div>
         </div>
@@ -157,42 +131,23 @@ export default function HqDashboard() {
         </button>
       </div>
 
-      {/* Mobile Slide-out Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="md:hidden fixed inset-x-0 top-[73px] bottom-0 z-40 bg-[var(--color-elephant-coffee)] text-white flex flex-col border-t border-white/10"
-          >
-            <div className="flex-1 py-4 flex flex-col gap-1">
-              <NavigationLinks />
-            </div>
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="md:hidden fixed inset-x-0 top-[73px] bottom-0 z-40 bg-[var(--color-elephant-coffee)] text-white flex flex-col border-t border-white/10">
+            <div className="flex-1 py-4 flex flex-col gap-1"><NavigationLinks /></div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Desktop Sidebar */}
       <div className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-[#1a0f0a] text-white flex-col shadow-2xl z-20 border-r border-white/10">
         <div className="p-6 border-b border-white/10 flex items-center gap-3">
-          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-2xl w-14 h-14 flex items-center justify-center text-3xl shadow-lg border border-[#E8A82A]/40">
-            🐘
-          </div>
-          <div>
-            <h1 className="font-[family-name:var(--font-playfair)] font-bold text-xl leading-tight tracking-tight text-[var(--color-elephant-gold)]">AECRCMC</h1>
-            <p className="text-[10px] text-white/50 tracking-widest uppercase mt-0.5">HQ Dashboard</p>
-          </div>
+          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-2xl w-14 h-14 flex items-center justify-center text-3xl shadow-lg border border-[#E8A82A]/40">🐘</div>
+          <div><h1 className="font-[family-name:var(--font-playfair)] font-bold text-xl leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1><p className="text-[10px] text-white/50 tracking-widest uppercase mt-0.5">HQ Dashboard</p></div>
         </div>
-        
-        <div className="flex-1 py-6 flex flex-col gap-2">
-          <NavigationLinks />
-        </div>
+        <div className="flex-1 py-6 flex flex-col gap-2"><NavigationLinks /></div>
       </div>
 
-      {/* Main Content Area */}
       <div className="md:pl-64 flex-1 min-h-screen relative overflow-hidden">
-        {/* Background Decorative Element */}
         <div className="fixed bottom-[-100px] right-[-100px] p-8 opacity-[0.03] pointer-events-none text-[500px] leading-none text-white">🐘</div>
         
         <div className="p-4 md:p-8 relative z-10 max-w-7xl mx-auto">
@@ -208,173 +163,126 @@ export default function HqDashboard() {
             </button>
           </div>
 
-          {/* KPI Stats Row */}
+          {/* KPI Row */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5 mb-8">
-            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
+            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-blue-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><FileText size={14} className="text-blue-400"/> Total Sightings</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">{stats.totalReports}</div>
-              <div className="text-[11px] text-white/20 mt-2">All time reports</div>
-            </motion.div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><FileText size={14} className="text-blue-400"/> Total Logs</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{stats.totalReports}</div>
+            </div>
             
-            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
+            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-amber)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><Bell size={14} className="text-[var(--color-elephant-amber)]"/> Active Alerts</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">{stats.activeAlerts}</div>
-              <div className="text-[11px] text-white/20 mt-2">Requires attention</div>
-            </motion.div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><Bell size={14} className="text-[var(--color-elephant-amber)]"/> Active Alerts</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{stats.activeAlerts}</div>
+            </div>
 
-            <motion.div whileHover={{ y: -4 }} className="bg-[#2a0f0a] border border-red-900/30 rounded-2xl p-5 relative overflow-hidden shadow-lg group col-span-2 md:col-span-1 lg:col-span-1">
+            <div className="bg-[#2a0f0a] border border-red-900/30 rounded-2xl p-5 relative overflow-hidden shadow-lg group col-span-2 md:col-span-1 lg:col-span-1">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-red-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-red-400 mb-3 flex items-center gap-2"><AlertTriangle size={14}/> High Severity</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-red-500 leading-none mb-1">{stats.highSeverity}</div>
-              <div className="text-[11px] text-red-500/30 mt-2">Critical incidents</div>
-            </motion.div>
-            
-            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-moss)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3">Lone Male</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">1,978</div>
-              <div className="text-[11px] text-white/20 mt-2">Most common type</div>
-            </motion.div>
-            
-            <motion.div whileHover={{ y: -4 }} className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-sage)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3">Female + Calf</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white leading-none mb-1">637</div>
-              <div className="text-[11px] text-white/20 mt-2">Vulnerable groups</div>
-            </motion.div>
-          </div>
-
-          {/* Charts Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <div className="lg:col-span-2 bg-[#24150e] border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl">
-              <div className="mb-6">
-                <h3 className="font-bold text-xl md:text-2xl text-white mb-1 tracking-tight">Monthly Incident Trend</h3>
-                <div className="text-xs font-medium text-white/40">2025 peak analysis</div>
-              </div>
-              <div className="h-60 md:h-72 w-full">
-                <Bar 
-                  data={{
-                    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'],
-                    datasets: [{
-                      label: 'Incidents',
-                      data: [534,359,419,385,344,218,204,164],
-                      backgroundColor: ['#C17F3A','#C17F3A','#C17F3A','#C17F3A','#C17F3A','#7FB07A','#7FB07A','#7FB07A'],
-                      borderRadius: 6,
-                      barPercentage: 0.7
-                    }]
-                  }}
-                  options={{
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false }, tooltip: { padding: 12, cornerRadius: 8 } },
-                    scales: { 
-                      x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)', font: { family: 'DM Sans', weight: 'bold' } } }, 
-                      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)' }, border: { display: false } } 
-                    }
-                  }}
-                />
-              </div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-red-400 mb-3 flex items-center gap-2"><AlertTriangle size={14}/> High Risk</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-red-500">{stats.highSeverity}</div>
             </div>
-            
-            <div className="bg-[#24150e] border border-white/5 rounded-3xl p-6 md:p-8 shadow-xl">
-              <div className="mb-6 text-center lg:text-left">
-                <h3 className="font-bold text-xl md:text-2xl text-white mb-1 tracking-tight">Elephant Type</h3>
-                <div className="text-xs font-medium text-white/40">Group breakdown</div>
-              </div>
-              <div className="h-60 md:h-72 w-full relative flex items-center justify-center">
-                <Doughnut 
-                  data={{
-                    labels: ['Lone Male','Female Group','Male Group','Female+Calf','Single Female'],
-                    datasets: [{
-                      data: [1978,1219,1035,637,154],
-                      backgroundColor: ['#C17F3A','#27AE60','#E67E22','#2980B9','#8E44AD'],
-                      borderWidth: 0,
-                      hoverOffset: 4
-                    }]
-                  }}
-                  options={{
-                    responsive: true, maintainAspectRatio: false, cutout: '75%',
-                    plugins: { legend: { display: false }, tooltip: { padding: 12, cornerRadius: 8 } }
-                  }}
-                />
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-3xl font-black text-white font-[family-name:var(--font-playfair)]">4k+</span>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Total</span>
-                </div>
-              </div>
+
+            {/* Tamil Nadu Specific Mock KPIs for depth */}
+            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-green-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><ShieldCheck size={14} className="text-green-500"/> Clearance Logs</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{reports.filter(r => r.report_type === 'CLEARANCE').length}</div>
+            </div>
+
+            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-purple-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><Mic size={14} className="text-purple-400"/> Voice Proofs</div>
+              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{reports.filter(r => r.voice_url).length}</div>
             </div>
           </div>
 
-          {/* Map & Alerts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-            <div className="lg:col-span-2 bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
-              <div className="p-5 border-b border-white/5 flex flex-wrap justify-between items-center bg-white/5 backdrop-blur-sm gap-4">
-                <h3 className="font-bold text-white flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
-                  <MapIcon size={18} className="text-[var(--color-elephant-gold)]"/> Geographic Monitor
+            {/* Live Map with Audio & Clearance Support */}
+            <div className="lg:col-span-2 bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[600px]">
+              <div className="p-5 border-b border-white/5 flex justify-between items-center bg-white/5 backdrop-blur-sm">
+                <h3 className="font-bold text-white flex items-center gap-2 text-sm uppercase tracking-widest">
+                  <MapIcon size={18} className="text-[var(--color-elephant-gold)]"/> Geographic Intelligence
                 </h3>
               </div>
               <div className="flex-1 relative z-0 bg-[#0c0c0c]">
                 {reports.length > 0 ? (
                    <MapContainer center={mapCenterParams ? [mapCenterParams.lat, mapCenterParams.lng] : [reports[0].latitude || 11.1, reports[0].longitude || 77.0]} zoom={mapCenterParams ? 16 : 8} scrollWheelZoom={true} className="w-full h-full">
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                    />
+                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
                     <MapUpdater center={mapCenterParams} />
                     {reports.map((report) => report.latitude && (
                       <Marker 
                         key={report.id} 
                         position={[report.latitude, report.longitude]}
-                        icon={icons[report.severity]}
+                        icon={report.report_type === 'CLEARANCE' ? icons.CLEAR : icons[report.severity]}
                       >
                         <Popup className="elephant-popup">
-                          <div className="w-48 font-[family-name:var(--font-dm)] p-1 text-white">
-                            <div className={`px-2.5 py-1.5 text-[10px] font-black uppercase tracking-widest text-white rounded-lg mb-3 inline-block shadow-sm ${report.severity === 'HIGH' ? 'bg-red-600' : report.severity === 'MEDIUM' ? 'bg-[#E8A82A]' : 'bg-green-600'}`}>
-                              {report.severity} SEVERITY
+                          <div className="w-56 font-[family-name:var(--font-dm)] p-1 text-white">
+                            <div className={`px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-white rounded mb-3 inline-block ${report.report_type === 'CLEARANCE' ? 'bg-blue-600' : report.severity === 'HIGH' ? 'bg-red-600' : 'bg-orange-500'}`}>
+                              {report.report_type} | {report.severity}
                             </div>
-                            <p className="font-bold text-base mb-1 text-black">{report.elephant_count} Elephants</p>
-                            <p className="text-xs font-medium text-gray-600 mb-1">Public Report</p>
-                            <p className="text-[10px] font-bold text-gray-400 mb-3">{new Date(report.created_at).toLocaleString()}</p>
-                            {report.notes && <p className="text-xs italic bg-gray-50 p-3 rounded-xl mb-3 border-l-4 border-[var(--color-elephant-amber)] text-gray-700">"{report.notes}"</p>}
+                            
+                            {report.report_type === 'SIGHTING' ? (
+                              <p className="font-bold text-base mb-1 text-black">{report.elephant_count} Elephants</p>
+                            ) : (
+                              <div className="mb-2">
+                                <p className="font-bold text-sm text-black flex items-center gap-1">
+                                  {report.is_clear ? <ShieldCheck size={14} className="text-green-600"/> : <AlertTriangle size={14} className="text-orange-600"/>}
+                                  {report.is_clear ? 'Area Cleared' : 'Ongoing Conflict'}
+                                </p>
+                                {report.casualties > 0 && <p className="text-xs font-black text-red-600 uppercase mt-1">{report.casualties} Casualties Reported</p>}
+                              </div>
+                            )}
+
+                            <p className="text-[10px] font-bold text-gray-400 mb-3 border-b pb-2 border-gray-100">{new Date(report.created_at).toLocaleString()}</p>
+                            
+                            {report.damage_desc && <p className="text-xs italic bg-gray-50 p-2 rounded-lg mb-3 text-gray-700 border-l-2 border-blue-500">Damage: {report.damage_desc}</p>}
+                            {report.notes && <p className="text-xs italic bg-gray-50 p-2 rounded-lg mb-3 text-gray-700 border-l-2 border-[var(--color-elephant-amber)]">"{report.notes}"</p>}
+                            
+                            {report.voice_url && (
+                              <div className="mt-3 p-2 bg-black/5 rounded-xl border border-black/5">
+                                <p className="text-[9px] font-bold uppercase text-gray-400 mb-1 flex items-center gap-1"><Mic size={10}/> Voice Note</p>
+                                <audio src={getAPIUrl(report.voice_url)} controls className="h-8 w-full accent-[var(--color-elephant-gold)]" />
+                              </div>
+                            )}
+
+                            {report.image_url && (
+                              <div className="mt-3">
+                                <img src={getAPIUrl(report.image_url)} alt="Proof" className="w-full h-24 object-cover rounded-lg shadow-sm border border-gray-100" />
+                              </div>
+                            )}
                           </div>
                         </Popup>
                       </Marker>
                     ))}
                   </MapContainer>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-white/20 text-sm font-medium">
-                    {loading ? 'Booting Geo-intelligence...' : 'No location data available'}
-                  </div>
+                  <div className="w-full h-full flex items-center justify-center text-white/20 text-sm font-medium">Initializing Map Intelligence...</div>
                 )}
               </div>
             </div>
 
-            <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
+            {/* Critical Alert Feed */}
+            <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden flex flex-col h-[600px]">
               <div className="p-5 border-b border-red-900/30 bg-red-900/10">
-                <h3 className="font-bold text-red-400 flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
-                  <Bell size={18} className="text-red-500 animate-pulse" /> Critical Incidents
+                <h3 className="font-bold text-red-400 flex items-center gap-2 text-sm uppercase tracking-widest">
+                  <Bell size={18} className="text-red-500 animate-pulse" /> Live Threats
                 </h3>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white/[0.02] custom-scrollbar">
                 {alerts.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-white/20 py-8 text-sm gap-3">
-                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                      <AlertTriangle size={24} className="text-white/10"/>
-                    </div>
-                    No active high priority alerts.
+                  <div className="h-full flex flex-col items-center justify-center text-white/10 py-8 text-sm gap-3">
+                    <AlertTriangle size={32} className="opacity-10"/> No unread high-priority threats.
                   </div>
                 ) : (
                   alerts.map(alert => (
-                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} key={alert.id} className="border-l-4 border-red-600 bg-red-900/10 hover:bg-red-900/20 p-4 rounded-r-2xl shadow-lg transition-all cursor-pointer group">
-                      <div className="flex justify-between items-start mb-2.5">
-                        <span className="text-[10px] font-black text-red-400 bg-red-900/30 px-2.5 py-1 rounded-md uppercase tracking-widest border border-red-500/20">Active</span>
-                        <span className="text-[10px] font-bold text-white/40 bg-white/5 px-2 py-1 rounded-md">{new Date(alert.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} key={alert.id} className="border-l-4 border-red-600 bg-red-900/10 hover:bg-red-900/20 p-4 rounded-r-2xl shadow-lg transition-all group">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] font-black text-red-400 bg-red-900/30 px-2.5 py-1 rounded-md uppercase tracking-widest border border-red-500/20">Critical</span>
+                        <span className="text-[10px] font-bold text-white/40">{new Date(alert.created_at).toLocaleTimeString()}</span>
                       </div>
-                      <p className="text-base font-bold text-white mt-1 tracking-tight">Sighting Alert</p>
-                      <p className="text-xs font-medium text-white/40 mt-2 flex items-center gap-1.5 group-hover:text-[var(--color-elephant-gold)] transition-colors">
-                        <MapPin size={14}/> {alert.latitude?.toFixed(4)}, {alert.longitude?.toFixed(4)}
-                      </p>
+                      <p className="text-base font-bold text-white tracking-tight">Active Sighting Alert</p>
+                      <p className="text-xs font-medium text-white/40 mt-2 flex items-center gap-1.5"><MapPin size={12}/> {alert.latitude?.toFixed(4)}, {alert.longitude?.toFixed(4)}</p>
                     </motion.div>
                   ))
                 )}
