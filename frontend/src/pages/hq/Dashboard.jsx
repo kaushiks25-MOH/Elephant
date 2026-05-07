@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { LogOut, Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X } from 'lucide-react';
+import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X } from 'lucide-react';
 import { fetchReports, fetchAnalytics, fetchActiveAlerts } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -55,7 +55,6 @@ export default function HqDashboard() {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const locationState = useLocation();
   const mapCenterParams = locationState.state?.centerMapOn;
 
@@ -123,12 +122,6 @@ export default function HqDashboard() {
     };
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
   const getAPIUrl = (path) => {
     if (path.startsWith('http')) return path;
     return path;
@@ -136,11 +129,14 @@ export default function HqDashboard() {
 
   const NavigationLinks = () => (
     <>
-      <Link to="/hq" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white whitespace-nowrap md:rounded-none">
+      <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white whitespace-nowrap md:rounded-none">
         <MapIcon size={20} className="text-[var(--color-elephant-gold)]" /> <span className="font-medium text-sm">Live Dashboard</span>
       </Link>
-      <Link to="/hq/reports" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 text-white/60 hover:bg-white/5 hover:text-white transition-colors whitespace-nowrap md:rounded-none">
+      <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 text-white/60 hover:bg-white/5 hover:text-white transition-colors whitespace-nowrap md:rounded-none">
         <FileText size={20} /> <span className="font-medium text-sm">All Reports</span>
+      </Link>
+      <Link to="/report" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 text-white/60 hover:bg-white/5 hover:text-white transition-colors whitespace-nowrap md:rounded-none">
+        <MapPin size={20} /> <span className="font-medium text-sm">File New Report</span>
       </Link>
     </>
   );
@@ -176,20 +172,6 @@ export default function HqDashboard() {
             <div className="flex-1 py-4 flex flex-col gap-1">
               <NavigationLinks />
             </div>
-            <div className="p-6 bg-black/20 border-t border-white/10">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-12 h-12 rounded-full bg-[var(--color-elephant-moss)] flex items-center justify-center text-lg font-bold border border-[var(--color-elephant-sage)] shadow-inner">
-                  {user?.name?.charAt(0) || 'U'}
-                </div>
-                <div>
-                  <p className="text-base font-medium text-white">{user?.name}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-[var(--color-elephant-amber)] mt-0.5">{user?.role}</p>
-                </div>
-              </div>
-              <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-sm py-3 rounded-xl transition-all text-red-400 font-medium">
-                <LogOut size={18} /> Secure Logout
-              </button>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -209,26 +191,10 @@ export default function HqDashboard() {
         <div className="flex-1 py-6 flex flex-col gap-2">
           <NavigationLinks />
         </div>
-
-        <div className="p-6 border-t border-white/10 bg-black/20">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-full bg-[var(--color-elephant-moss)] flex items-center justify-center text-lg font-bold border-2 border-[var(--color-elephant-sage)] shadow-inner">
-              {user?.name?.charAt(0) || 'U'}
-            </div>
-            <div>
-              <p className="text-sm font-bold text-white tracking-wide">{user?.name}</p>
-              <p className="text-[10px] uppercase tracking-widest text-[var(--color-elephant-amber)] mt-0.5">{user?.role}</p>
-            </div>
-          </div>
-          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-red-500/10 hover:border-red-500/20 hover:text-red-400 text-sm py-3 rounded-xl transition-all text-white/80 font-medium">
-            <LogOut size={16} /> Logout
-          </button>
-        </div>
       </div>
 
       {/* Main Content Area */}
       <div className="md:pl-64 flex-1 min-h-screen relative overflow-hidden">
-        {/* Background Decorative Element */}
         <div className="fixed top-[-100px] right-[-100px] p-8 opacity-[0.03] pointer-events-none text-[400px] leading-none mix-blend-multiply">🐘</div>
         
         <div className="p-4 md:p-8 relative z-10 max-w-7xl mx-auto">
@@ -267,7 +233,6 @@ export default function HqDashboard() {
               <div className="text-[11px] text-red-500/80 mt-2">Critical incidents</div>
             </motion.div>
             
-            {/* Static UI placeholders */}
             <motion.div whileHover={{ y: -4 }} className="bg-gradient-to-br from-white to-[#f4f7f6] border border-[var(--color-elephant-border)] rounded-2xl p-5 relative overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-moss)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
               <div className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-[var(--color-elephant-muted)] mb-3">Lone Male</div>
@@ -288,7 +253,7 @@ export default function HqDashboard() {
             <div className="lg:col-span-2 bg-white border border-[var(--color-elephant-border)] rounded-3xl p-6 md:p-8 shadow-sm">
               <div className="mb-6">
                 <h3 className="font-bold text-xl md:text-2xl text-[var(--color-elephant-coffee)] mb-1 tracking-tight">Monthly Incident Trend</h3>
-                <div className="text-xs font-medium text-[var(--color-elephant-muted)]">2025 — January through August peak analysis (Static Preview)</div>
+                <div className="text-xs font-medium text-[var(--color-elephant-muted)]">2025 peak analysis</div>
               </div>
               <div className="h-60 md:h-72 w-full">
                 <Bar 
@@ -314,7 +279,7 @@ export default function HqDashboard() {
             <div className="bg-white border border-[var(--color-elephant-border)] rounded-3xl p-6 md:p-8 shadow-sm">
               <div className="mb-6 text-center lg:text-left">
                 <h3 className="font-bold text-xl md:text-2xl text-[var(--color-elephant-coffee)] mb-1 tracking-tight">Elephant Type</h3>
-                <div className="text-xs font-medium text-[var(--color-elephant-muted)]">Observed group breakdown</div>
+                <div className="text-xs font-medium text-[var(--color-elephant-muted)]">Group breakdown</div>
               </div>
               <div className="h-60 md:h-72 w-full relative flex items-center justify-center">
                 <Doughnut 
@@ -342,17 +307,11 @@ export default function HqDashboard() {
 
           {/* Map & Alerts Row */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-            {/* Map */}
             <div className="lg:col-span-2 bg-white rounded-3xl shadow-sm border border-[var(--color-elephant-border)] overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
               <div className="p-5 border-b border-[var(--color-elephant-border)] flex flex-wrap justify-between items-center bg-gradient-to-r from-[var(--color-elephant-cream)] to-white gap-4">
                 <h3 className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
                   <MapIcon size={18} className="text-[var(--color-elephant-amber)]"/> Live Incident Map
                 </h3>
-                <div className="flex gap-4 text-xs font-bold text-[var(--color-elephant-muted)]">
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-red-500 inline-block shadow-sm"></span> High</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-[#E8A82A] inline-block shadow-sm"></span> Med</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-green-500 inline-block shadow-sm"></span> Low</span>
-                </div>
               </div>
               <div className="flex-1 relative z-0 bg-[#1a1a1a]">
                 {reports.length > 0 ? (
@@ -374,12 +333,9 @@ export default function HqDashboard() {
                               {report.severity} SEVERITY
                             </div>
                             <p className="font-bold text-base mb-1 text-[var(--color-elephant-coffee)]">{report.elephant_count} Elephants</p>
-                            <p className="text-xs font-medium text-[var(--color-elephant-muted)] mb-1">By {report.officer_name} • {report.range_division}</p>
+                            <p className="text-xs font-medium text-[var(--color-elephant-muted)] mb-1">Public Report</p>
                             <p className="text-[10px] font-bold text-[var(--color-elephant-muted)]/60 mb-3">{new Date(report.created_at).toLocaleString()}</p>
                             {report.notes && <p className="text-xs italic bg-[var(--color-elephant-ivory)] p-3 rounded-xl mb-3 border-l-4 border-[var(--color-elephant-amber)] text-[var(--color-elephant-text)]">"{report.notes}"</p>}
-                            {report.image_url && (
-                              <img src={getAPIUrl(report.image_url)} alt="Elephant" className="w-full h-28 object-cover rounded-xl shadow-sm border border-gray-100" />
-                            )}
                           </div>
                         </Popup>
                       </Marker>
@@ -393,7 +349,6 @@ export default function HqDashboard() {
               </div>
             </div>
 
-            {/* Active Alerts Feed */}
             <div className="bg-white rounded-3xl shadow-sm border border-[var(--color-elephant-border)] overflow-hidden flex flex-col h-[400px] lg:h-[600px]">
               <div className="p-5 border-b border-red-100 bg-gradient-to-r from-red-50 to-white">
                 <h3 className="font-bold text-red-800 flex items-center gap-2 text-sm md:text-base uppercase tracking-widest">
@@ -415,7 +370,7 @@ export default function HqDashboard() {
                         <span className="text-[10px] font-black text-red-600 bg-red-100 px-2.5 py-1 rounded-md uppercase tracking-widest">New Alert</span>
                         <span className="text-[10px] font-bold text-[var(--color-elephant-muted)] bg-white border border-gray-100 px-2 py-1 rounded-md shadow-sm">{new Date(alert.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                       </div>
-                      <p className="text-base font-bold text-[var(--color-elephant-coffee)] mt-1 tracking-tight">Sighting in {alert.range_division}</p>
+                      <p className="text-base font-bold text-[var(--color-elephant-coffee)] mt-1 tracking-tight">Sighting Alert</p>
                       <p className="text-xs font-medium text-[var(--color-elephant-muted)] mt-2 flex items-center gap-1.5 group-hover:text-[var(--color-elephant-amber)] transition-colors">
                         <MapPin size={14}/> {alert.latitude?.toFixed(4)}, {alert.longitude?.toFixed(4)}
                       </p>
@@ -425,7 +380,6 @@ export default function HqDashboard() {
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
