@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Map as MapIcon, Search, Filter, Menu, X, MapPin, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { FileText, Map as MapIcon, Search, Filter, Menu, X, MapPin, ShieldCheck, AlertTriangle, Mic } from 'lucide-react';
 import { fetchReports } from '../../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -87,78 +87,73 @@ export default function HqReports() {
           </div>
 
           <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden">
-            {/* Toolbar */}
             <div className="p-5 border-b border-white/5 flex flex-col lg:flex-row gap-4 justify-between items-center bg-white/5">
               <div className="relative w-full lg:w-72">
                 <Search className="absolute left-3 top-2.5 text-white/30" size={18} />
-                <input type="text" placeholder="Search notes/damage..." className="w-full pl-10 pr-4 py-2 border border-white/10 rounded-xl text-sm bg-white/5 text-white focus:border-[var(--color-elephant-gold)]" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                <input type="text" placeholder="Search entries..." className="w-full pl-10 pr-4 py-2 border border-white/10 rounded-xl text-sm bg-white/5 text-white focus:border-[var(--color-elephant-gold)]" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               </div>
               <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                 <select className="border border-white/10 rounded-xl py-2 px-3 text-xs bg-white/5 text-white font-bold" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
                   <option value="ALL">All Types</option>
-                  <option value="SIGHTING">Sightings Only</option>
-                  <option value="CLEARANCE">Clearance Only</option>
-                </select>
-                <select className="border border-white/10 rounded-xl py-2 px-3 text-xs bg-white/5 text-white font-bold" value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)}>
-                  <option value="ALL">All Severities</option>
-                  <option value="HIGH">High Only</option>
-                  <option value="MEDIUM">Medium Only</option>
-                  <option value="LOW">Low Only</option>
+                  <option value="SIGHTING">Sightings</option>
+                  <option value="CLEARANCE">Clearance</option>
                 </select>
               </div>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[1000px]">
+              <table className="w-full text-left border-collapse min-w-[1200px]">
                 <thead>
                   <tr className="bg-white/5 border-b border-white/5 text-[var(--color-elephant-gold)] text-[10px] uppercase tracking-widest font-[family-name:var(--font-playfair)]">
                     <th className="p-5 font-bold">Time & Type</th>
                     <th className="p-5 font-bold">Location</th>
-                    <th className="p-5 font-bold">Sighting Details</th>
-                    <th className="p-5 font-bold">Clearance & Damage</th>
-                    <th className="p-5 font-bold text-right">Evidence</th>
+                    <th className="p-5 font-bold">Sighting/Clearance</th>
+                    <th className="p-5 font-bold">Voice Note</th>
+                    <th className="p-5 font-bold text-right">Proof</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {loading ? (
-                    <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">Syncing records...</td></tr>
+                    <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">Syncing HQ Database...</td></tr>
                   ) : filteredReports.length === 0 ? (
-                    <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">No reports matching criteria.</td></tr>
+                    <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">No reports found.</td></tr>
                   ) : (
                     filteredReports.map(report => (
                       <tr key={report.id} className="hover:bg-white/5 transition-colors group">
                         <td className="p-5">
                           <p className="text-xs text-white/60 font-medium">{new Date(report.created_at).toLocaleString()}</p>
-                          <span className={`mt-1 inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter ${report.report_type === 'CLEARANCE' ? 'bg-blue-600' : 'bg-green-700'}`}>
-                            {report.report_type}
-                          </span>
+                          <span className={`mt-1 inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter ${report.report_type === 'CLEARANCE' ? 'bg-blue-600' : 'bg-green-700'}`}>{report.report_type}</span>
                         </td>
                         <td className="p-5">
                           <div className="flex items-center gap-1.5 text-[11px] text-white/40 font-bold"><MapPin size={12} className="text-[var(--color-elephant-gold)]"/>{report.latitude?.toFixed(4)}, {report.longitude?.toFixed(4)}</div>
                         </td>
                         <td className="p-5">
                           {report.report_type === 'SIGHTING' ? (
-                            <>
+                            <div className="space-y-1">
                               <p className="text-sm font-bold text-white">{report.elephant_count} Elephants</p>
-                              <span className={`mt-1 px-2 py-0.5 text-[8px] font-black rounded uppercase ${report.severity === 'HIGH' ? 'bg-red-600' : report.severity === 'MEDIUM' ? 'bg-orange-500' : 'bg-green-600'}`}>{report.severity}</span>
-                            </>
-                          ) : <span className="text-white/10">-</span>}
-                        </td>
-                        <td className="p-5">
-                          {report.report_type === 'CLEARANCE' ? (
+                              <span className={`px-2 py-0.5 text-[8px] font-black rounded uppercase ${report.severity === 'HIGH' ? 'bg-red-600' : 'bg-orange-500'}`}>{report.severity}</span>
+                            </div>
+                          ) : (
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
                                 {report.is_clear ? <ShieldCheck size={14} className="text-green-500"/> : <AlertTriangle size={14} className="text-orange-500"/>}
-                                <span className="text-xs font-bold">{report.is_clear ? 'Clear' : 'Still Active'}</span>
+                                <span className="text-xs font-bold">{report.is_clear ? 'Clear' : 'Active'}</span>
                               </div>
-                              {report.casualties > 0 && <p className="text-[10px] font-black text-red-500 uppercase tracking-widest">{report.casualties} Dead/Casualties</p>}
-                              {report.damage_desc && <p className="text-xs text-white/50 italic truncate max-w-xs">{report.damage_desc}</p>}
+                              {report.casualties > 0 && <p className="text-[10px] font-black text-red-500 uppercase tracking-widest">{report.casualties} Casualties</p>}
                             </div>
-                          ) : <span className="text-white/10">-</span>}
+                          )}
+                        </td>
+                        <td className="p-5">
+                          {report.voice_url ? (
+                            <div className="flex items-center gap-3 bg-black/20 p-2 rounded-xl border border-white/5 w-fit">
+                              <Mic size={14} className="text-[var(--color-elephant-gold)] animate-pulse" />
+                              <audio src={getAPIUrl(report.voice_url)} controls className="h-8 w-40 accent-[var(--color-elephant-gold)]" />
+                            </div>
+                          ) : <span className="text-white/10 text-[10px] italic">No audio note</span>}
                         </td>
                         <td className="p-5 text-right">
                           {report.image_url ? (
-                            <a href={getAPIUrl(report.image_url)} target="_blank" rel="noreferrer" className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all group-hover:bg-white/10">View Proof</a>
+                            <a href={getAPIUrl(report.image_url)} target="_blank" rel="noreferrer" className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all group-hover:bg-white/10">Proof</a>
                           ) : <span className="text-white/10 text-xs italic">No Proof</span>}
                         </td>
                       </tr>

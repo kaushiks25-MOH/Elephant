@@ -1,8 +1,7 @@
 import { supabase } from './supabase';
 
 /**
- * Submits a report (Sighting or Clearance)
- * @param {Object} reportData 
+ * Submits a report (Sighting or Clearance) with optional Voice Note
  */
 export async function submitReport({ 
   count, 
@@ -11,40 +10,43 @@ export async function submitReport({
   latitude, 
   longitude, 
   imageFile,
+  voiceFile, // New
   reportType = 'SIGHTING',
   isClear = false,
   damageDesc = '',
   casualties = 0
 }) {
   let imageUrl = null;
+  let voiceUrl = null;
   
+  // Handle Image Upload
   if (imageFile) {
     const fileExt = imageFile.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('evidence_photos')
-      .upload(fileName, imageFile);
-      
-    if (uploadError) throw new Error('Failed to upload image: ' + uploadError.message);
-    
-    const { data: publicUrlData } = supabase.storage
-      .from('evidence_photos')
-      .getPublicUrl(fileName);
-      
-    imageUrl = publicUrlData.publicUrl;
+    const fileName = `img_${Math.random()}.${fileExt}`;
+    const { error: uploadError } = await supabase.storage.from('evidence_photos').upload(fileName, imageFile);
+    if (uploadError) throw new Error('Image upload failed: ' + uploadError.message);
+    imageUrl = supabase.storage.from('evidence_photos').getPublicUrl(fileName).data.publicUrl;
+  }
+
+  // Handle Voice Upload
+  if (voiceFile) {
+    const fileName = `voice_${Date.now()}.webm`; // Most browsers use webm for MediaRecorder
+    const { error: voiceError } = await supabase.storage.from('evidence_photos').upload(fileName, voiceFile);
+    if (voiceError) throw new Error('Voice upload failed: ' + voiceError.message);
+    voiceUrl = supabase.storage.from('evidence_photos').getPublicUrl(fileName).data.publicUrl;
   }
   
   const { data, error } = await supabase
     .from('reports')
     .insert({
-      user_id: '00000000-0000-0000-0000-000000000000', // Placeholder for public portal
+      user_id: '00000000-0000-0000-0000-000000000000',
       elephant_count: count || 0,
       severity: severity || 'LOW',
       notes: notes,
       latitude: latitude,
       longitude: longitude,
       image_url: imageUrl,
+      voice_url: voiceUrl, // New
       report_type: reportType,
       is_clear: isClear,
       damage_desc: damageDesc,
@@ -64,12 +66,7 @@ export async function fetchReports() {
     .order('created_at', { ascending: false });
     
   if (error) throw new Error('Failed to fetch reports');
-  
-  return data.map(r => ({
-    ...r,
-    officer_name: r.report_type === 'CLEARANCE' ? 'Clearance Update' : 'Sighting Entry',
-    range_division: r.report_type === 'CLEARANCE' ? 'Status Update' : 'Public Portal'
-  }));
+  return data;
 }
 
 export async function fetchActiveAlerts() {
@@ -78,15 +75,12 @@ export async function fetchActiveAlerts() {
     .select('*, reports!inner(*)')
     .eq('status', 'UNREAD')
     .order('created_at', { ascending: false });
-    
   if (error) throw new Error('Failed to fetch alerts');
-  
   return data.map(a => ({
     ...a,
     latitude: a.reports.latitude,
     longitude: a.reports.longitude,
-    severity: a.reports.severity,
-    range_division: a.reports.report_type === 'CLEARANCE' ? 'CLEARANCE' : 'SIGHTING'
+    severity: a.reports.severity
   }));
 }
 
@@ -96,10 +90,5 @@ export async function fetchAnalytics() {
     supabase.from('alerts').select('*', { count: 'exact', head: true }).eq('status', 'UNREAD'),
     supabase.from('reports').select('*', { count: 'exact', head: true }).eq('severity', 'HIGH')
   ]);
-  
-  return {
-    totalReports: totalReports || 0,
-    activeAlerts: activeAlerts || 0,
-    highSeverity: highSeverity || 0
-  };
+  return { totalReports, activeAlerts, highSeverity };
 }
