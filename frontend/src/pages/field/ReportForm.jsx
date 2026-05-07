@@ -5,8 +5,15 @@ import { submitReport } from '../../lib/api';
 import { motion } from 'framer-motion';
 
 export default function ReportForm() {
-  const [count, setCount] = useState(1);
-  const [elephantType, setElephantType] = useState('');
+  const [typeCounts, setTypeCounts] = useState({
+    bull: 0,
+    malegroup: 0,
+    femcalf: 0,
+    herd: 0,
+    lonecow: 0,
+    cow: 0,
+    unknown: 0
+  });
   const [severity, setSeverity] = useState('LOW');
   const [notes, setNotes] = useState('');
   const [image, setImage] = useState(null);
@@ -55,16 +62,34 @@ export default function ReportForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!location) {
-      setLocationError('GPS location is required');
+    const totalCount = Object.values(typeCounts).reduce((a, b) => a + b, 0);
+    
+    if (totalCount === 0) {
+      alert('Please specify at least one elephant sighting');
+      setSubmitting(false);
       return;
     }
-    
-    setSubmitting(true);
+
+    // Build a summary of types for the notes
+    const elephantTypes = [
+      { id: 'bull', label: 'Bull' },
+      { id: 'malegroup', label: 'Male Group' },
+      { id: 'femcalf', label: 'Female with Calf' },
+      { id: 'herd', label: 'Elephant Group' },
+      { id: 'lonecow', label: 'Lone Cow' },
+      { id: 'cow', label: 'Cow' },
+      { id: 'unknown', label: 'Unidentified' }
+    ];
+
+    const typeSummary = Object.entries(typeCounts)
+      .filter(([_, count]) => count > 0)
+      .map(([id, count]) => `${count}x ${elephantTypes.find(t => t.id === id).label}`)
+      .join(', ');
+
+    const finalNotes = typeSummary ? `[Types: ${typeSummary}] ${notes}` : notes;
     
     try {
-      await submitReport(count, severity, notes, location.lat, location.lng, image, elephantType);
+      await submitReport(totalCount, severity, finalNotes, location.lat, location.lng, image);
       setSuccess(true);
       setTimeout(() => {
         navigate('/field');
@@ -142,11 +167,11 @@ export default function ReportForm() {
           )}
         </div>
 
-        {/* Elephant Type Selector */}
+        {/* Elephant Type Selector with Individual Counts */}
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)]">
           <label className="font-bold text-[var(--color-elephant-coffee)] flex items-center gap-2 mb-4 text-base">
             <span className="relative flex h-3 w-3 mr-1"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-elephant-amber)] opacity-75"></span><span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--color-elephant-amber)]"></span></span>
-            Elephant Type
+            Identify & Count
           </label>
           <div className="grid grid-cols-2 gap-3">
             {[
@@ -158,40 +183,47 @@ export default function ReportForm() {
               { id: 'cow',       emoji: '🐘', label: 'Cow',               desc: 'Generic Female' },
               { id: 'unknown',   emoji: '❓', label: 'Unidentified',      desc: 'Unclear view' },
             ].map((t) => (
-              <button
+              <div
                 key={t.id}
-                type="button"
-                onClick={() => setElephantType(t.id)}
                 className={`relative flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
-                  elephantType === t.id
-                    ? 'border-[var(--color-elephant-amber)] bg-[#fffcf5] shadow-md scale-[1.02]'
-                    : 'border-[var(--color-elephant-border)] bg-white hover:border-[var(--color-elephant-amber)]/50'
+                  typeCounts[t.id] > 0
+                    ? 'border-[var(--color-elephant-amber)] bg-[#fffcf5] shadow-md'
+                    : 'border-[var(--color-elephant-border)] bg-white'
                 }`}
               >
-                {elephantType === t.id && (
-                  <span className="absolute top-2 right-2 w-4 h-4 bg-[var(--color-elephant-amber)] rounded-full flex items-center justify-center text-white text-[8px] font-black">✓</span>
-                )}
                 <span className="text-3xl">{t.emoji}</span>
                 <div className="text-center">
                   <p className="text-sm font-bold text-[var(--color-elephant-coffee)]">{t.label}</p>
                   <p className="text-[10px] text-[var(--color-elephant-muted)] mt-0.5">{t.desc}</p>
                 </div>
-              </button>
+                
+                {/* Count Controls Inside Card */}
+                <div className="flex items-center gap-3 mt-3 bg-[var(--color-elephant-cream)] p-1.5 rounded-xl border border-[var(--color-elephant-border)]">
+                  <button 
+                    type="button"
+                    onClick={() => setTypeCounts(prev => ({ ...prev, [t.id]: Math.max(0, prev[t.id] - 1) }))}
+                    className="w-8 h-8 rounded-lg bg-white shadow-sm border border-[var(--color-elephant-border)] text-[var(--color-elephant-coffee)] font-black flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    -
+                  </button>
+                  <span className="text-sm font-black w-4 text-center text-[var(--color-elephant-coffee)]">
+                    {typeCounts[t.id]}
+                  </span>
+                  <button 
+                    type="button"
+                    onClick={() => setTypeCounts(prev => ({ ...prev, [t.id]: prev[t.id] + 1 }))}
+                    className="w-8 h-8 rounded-lg bg-[var(--color-elephant-coffee)] shadow-sm border border-[var(--color-elephant-coffee)] text-[var(--color-elephant-amber)] font-black flex items-center justify-center active:scale-90 transition-transform"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
 
         {/* Details Section */}
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-[var(--color-elephant-border)] space-y-6">
-          <div>
-            <label className="block text-sm font-bold text-[var(--color-elephant-coffee)] mb-3">Number of Elephants</label>
-            <div className="flex items-center gap-5 bg-[var(--color-elephant-cream)] p-2 rounded-2xl w-fit border border-[var(--color-elephant-border)]">
-              <button type="button" onClick={() => setCount(Math.max(1, count - 1))} className="w-12 h-12 rounded-xl bg-white shadow-sm border border-[var(--color-elephant-border)] text-[var(--color-elephant-coffee)] font-black text-2xl flex items-center justify-center active:scale-95 transition-transform">-</button>
-              <span className="text-3xl font-[family-name:var(--font-playfair)] font-black w-12 text-center text-[var(--color-elephant-coffee)]">{count}</span>
-              <button type="button" onClick={() => setCount(count + 1)} className="w-12 h-12 rounded-xl bg-[var(--color-elephant-coffee)] shadow-sm border border-[var(--color-elephant-coffee)] text-[var(--color-elephant-amber)] font-black text-2xl flex items-center justify-center active:scale-95 transition-transform">+</button>
-            </div>
-          </div>
-
           <div>
             <label className="block text-sm font-bold text-[var(--color-elephant-coffee)] mb-3">Severity / Threat Level</label>
             <div className="grid grid-cols-3 gap-3">
