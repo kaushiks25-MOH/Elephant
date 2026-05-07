@@ -1,7 +1,21 @@
 import { supabase } from './supabase';
 
-// No longer needs auth
-export async function submitReport(count, severity, notes, latitude, longitude, imageFile) {
+/**
+ * Submits a report (Sighting or Clearance)
+ * @param {Object} reportData 
+ */
+export async function submitReport({ 
+  count, 
+  severity, 
+  notes, 
+  latitude, 
+  longitude, 
+  imageFile,
+  reportType = 'SIGHTING',
+  isClear = false,
+  damageDesc = '',
+  casualties = 0
+}) {
   let imageUrl = null;
   
   if (imageFile) {
@@ -24,13 +38,17 @@ export async function submitReport(count, severity, notes, latitude, longitude, 
   const { data, error } = await supabase
     .from('reports')
     .insert({
-      user_id: '00000000-0000-0000-0000-000000000000', // Default guest ID or omit if nullable
-      elephant_count: count,
-      severity: severity,
+      user_id: '00000000-0000-0000-0000-000000000000', // Placeholder for public portal
+      elephant_count: count || 0,
+      severity: severity || 'LOW',
       notes: notes,
       latitude: latitude,
       longitude: longitude,
-      image_url: imageUrl
+      image_url: imageUrl,
+      report_type: reportType,
+      is_clear: isClear,
+      damage_desc: damageDesc,
+      casualties: casualties
     })
     .select()
     .single();
@@ -47,11 +65,10 @@ export async function fetchReports() {
     
   if (error) throw new Error('Failed to fetch reports');
   
-  // Format for UI
   return data.map(r => ({
     ...r,
-    officer_name: 'Field Report',
-    range_division: 'Public Entry'
+    officer_name: r.report_type === 'CLEARANCE' ? 'Clearance Update' : 'Sighting Entry',
+    range_division: r.report_type === 'CLEARANCE' ? 'Status Update' : 'Public Portal'
   }));
 }
 
@@ -69,7 +86,7 @@ export async function fetchActiveAlerts() {
     latitude: a.reports.latitude,
     longitude: a.reports.longitude,
     severity: a.reports.severity,
-    range_division: 'Public Entry'
+    range_division: a.reports.report_type === 'CLEARANCE' ? 'CLEARANCE' : 'SIGHTING'
   }));
 }
 
