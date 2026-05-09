@@ -13,7 +13,7 @@ const PageLoader = () => (
       <div className="absolute -inset-10 bg-[var(--color-elephant-gold)]/10 rounded-full animate-pulse blur-3xl"></div>
       <div className="absolute -inset-2 border-2 border-dashed border-[var(--color-elephant-gold)]/40 rounded-full animate-[spin_12s_linear_infinite]"></div>
       <div className="absolute -inset-6 border border-[var(--color-elephant-gold)]/10 rounded-full"></div>
-      <img src="/logo.png" alt="Loading..." className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(232,168,42,0.2)]" />
+      <img src="/logo.png" alt="Loading..." className="w-full h-full object-contain relative z-10 rounded-full drop-shadow-[0_0_30px_rgba(232,168,42,0.2)]" />
     </div>
     <div className="space-y-2 text-center">
       <p className="text-sm font-black tracking-[0.3em] uppercase text-[var(--color-elephant-gold)]">AECRCMC</p>

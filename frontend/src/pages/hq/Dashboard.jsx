@@ -120,7 +120,7 @@ export default function HqDashboard() {
       <div className="md:hidden sticky top-0 z-50 bg-[#1a0f0a] text-white flex items-center justify-between p-4 shadow-md border-b border-white/10">
         <div className="flex items-center gap-4">
           <div className="bg-white p-0.5 rounded-full w-14 h-14 flex items-center justify-center shadow-lg border-2 border-[var(--color-elephant-gold)]/40 overflow-hidden">
-            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
           </div>
           <div>
             <h1 className="font-[family-name:var(--font-playfair)] font-bold text-base leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1>
@@ -143,7 +143,7 @@ export default function HqDashboard() {
       <div className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-[#1a0f0a] text-white flex-col shadow-2xl z-20 border-r border-white/10">
         <div className="p-6 border-b border-white/10 flex flex-col items-center gap-4 text-center">
           <div className="bg-white p-1 rounded-full w-24 h-24 flex items-center justify-center shadow-xl border-2 border-[var(--color-elephant-gold)] overflow-hidden">
-            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
           </div>
           <div><h1 className="font-[family-name:var(--font-playfair)] font-bold text-xl leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1><p className="text-[10px] text-white/50 tracking-widest uppercase mt-0.5">HQ Dashboard</p></div>
         </div>

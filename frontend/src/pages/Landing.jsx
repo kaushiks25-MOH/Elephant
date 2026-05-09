@@ -21,7 +21,7 @@ const Nav = ({ setIsMobileMenuOpen }) => (
   <nav className="sticky top-0 z-[1000] bg-[rgba(44,24,16,0.97)] backdrop-blur-xl px-4 md:px-10 flex items-center justify-between h-20 border-b border-[var(--color-elephant-gold)]/20 transition-all">
     <Link to="/" className="flex items-center gap-4">
       <div className="w-16 h-16 bg-white rounded-full overflow-hidden flex items-center justify-center p-0.5 border-2 border-[var(--color-elephant-gold)]/40 shadow-lg shadow-[var(--color-elephant-gold)]/10">
-        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+        <img src="/logo.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
       </div>
       <div className="text-white">
         <div className="font-[family-name:var(--font-playfair)] text-base md:text-xl font-bold leading-tight tracking-tight">AECRCMC</div>
@@ -164,7 +164,7 @@ export default function Landing() {
       <footer className="bg-[var(--color-elephant-coffee)] text-white py-20">
         <div className="container mx-auto px-6 text-center space-y-8">
           <div className="flex items-center justify-center gap-5 mb-10">
-            <div className="w-20 h-20 bg-white rounded-full p-1 border-2 border-[var(--color-elephant-gold)] shadow-xl"><img src="/logo.png" className="w-full h-full object-contain" alt="Logo" /></div>
+            <div className="w-20 h-20 bg-white rounded-full p-1 border-2 border-[var(--color-elephant-gold)] shadow-xl"><img src="/logo.png" className="w-full h-full object-contain rounded-full" alt="Logo" /></div>
             <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-[var(--color-elephant-gold)]">AECRCMC</div>
           </div>
           <p className="text-white/40 text-sm max-w-lg mx-auto font-medium">Asian Elephant Conservation Research and Conflict Management Centre Coimbatore.</p>
