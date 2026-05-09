@@ -133,6 +133,7 @@ export default function Landing() {
     return () => clearInterval(checkScripts);
   }, []);
 
+  useEffect(() => {
     if (!scriptsReady) return;
 
     try {
