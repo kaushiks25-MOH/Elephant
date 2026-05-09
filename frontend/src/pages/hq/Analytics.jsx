@@ -133,7 +133,11 @@ export default function HqAnalytics() {
       <div className="md:pl-64 flex-1 min-h-screen relative overflow-hidden">
         <div className="p-4 md:p-8 relative z-10 max-w-7xl mx-auto">
           {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8 bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-xl"
+          >
             <div>
               <div className="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--color-elephant-gold)] mb-1">Intelligence Report</div>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white tracking-tight">Data Analysis Engine</h2>
@@ -164,39 +168,40 @@ export default function HqAnalytics() {
                 </select>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
-             <div className="bg-[#24150e] border border-white/5 p-4 rounded-2xl">
-               <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Total Elephants</p>
-               <p className="text-xl font-bold text-green-500">{RD.reduce((s,r)=>s+r.e,0).toLocaleString()}</p>
-             </div>
-             <div className="bg-[#24150e] border border-white/5 p-4 rounded-2xl">
-               <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Total Incidents</p>
-               <p className="text-xl font-bold text-[var(--color-elephant-gold)]">{RD.reduce((s,r)=>s+r.i,0).toLocaleString()}</p>
-             </div>
-             <div className="bg-[#24150e] border border-white/5 p-4 rounded-2xl">
-               <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Months Tracked</p>
-               <p className="text-xl font-bold text-white">27</p>
-             </div>
-             <div className="bg-[#24150e] border border-white/5 p-4 rounded-2xl">
-               <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Peak Month</p>
-               <p className="text-xl font-bold text-red-500">Nov '24</p>
-             </div>
-             <div className="bg-[#24150e] border border-white/5 p-4 rounded-2xl">
-               <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Top Range</p>
-               <p className="text-xl font-bold text-blue-500">Coimbatore</p>
-             </div>
-             <div className="bg-[#24150e] border border-white/5 p-4 rounded-2xl">
-               <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">Resolution Ratio</p>
-               <p className="text-xl font-bold text-purple-500">49.4%</p>
-             </div>
+             {[
+               { lbl: 'Total Elephants', val: RD.reduce((s,r)=>s+r.e,0).toLocaleString(), c: 'text-green-500' },
+               { lbl: 'Total Incidents', val: RD.reduce((s,r)=>s+r.i,0).toLocaleString(), c: 'text-[var(--color-elephant-gold)]' },
+               { lbl: 'Months Tracked', val: '27', c: 'text-white' },
+               { lbl: 'Peak Month', val: "Nov '24", c: 'text-red-500' },
+               { lbl: 'Top Range', val: 'Coimbatore', c: 'text-blue-500' },
+               { lbl: 'Resolution Ratio', val: '49.4%', c: 'text-purple-500' }
+             ].map((s, i) => (
+               <motion.div 
+                 key={i}
+                 initial={{ opacity: 0, scale: 0.9 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 transition={{ delay: i * 0.05 }}
+                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                 className="bg-[#24150e] border border-white/5 p-4 rounded-2xl shadow-lg"
+               >
+                 <p className="text-[9px] uppercase tracking-widest text-white/40 mb-1">{s.lbl}</p>
+                 <p className={`text-xl font-bold ${s.c}`}>{s.val}</p>
+               </motion.div>
+             ))}
           </div>
 
           {/* Charts Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]"
+            >
               <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 flex items-center gap-2">
                 <TrendingUp size={14} className="text-[var(--color-elephant-gold)]"/> Monthly Trend (27 Months)
               </h3>
@@ -220,6 +225,7 @@ export default function HqAnalytics() {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
+                    animation: { duration: 2000, easing: 'easeOutQuart' },
                     scales: {
                       x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 } } },
                       y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 } } }
@@ -227,9 +233,14 @@ export default function HqAnalytics() {
                   }}
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]">
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]"
+            >
               <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 flex items-center gap-2">
                 <PieChartIcon size={14} className="text-[var(--color-elephant-gold)]"/> Range-wise Share
               </h3>
@@ -248,6 +259,7 @@ export default function HqAnalytics() {
                     responsive: true,
                     maintainAspectRatio: false,
                     cutout: '65%',
+                    animation: { animateRotate: true, animateScale: true, duration: 2500 },
                     plugins: {
                       legend: {
                         position: 'right',
@@ -257,11 +269,16 @@ export default function HqAnalytics() {
                   }}
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]"
+            >
                <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 flex items-center gap-2">
                  <BarChart3 size={14} className="text-[var(--color-elephant-gold)]"/> Range Comparison — Elephants vs Incidents
                </h3>
@@ -278,6 +295,7 @@ export default function HqAnalytics() {
                      responsive: true,
                      maintainAspectRatio: false,
                      plugins: { legend: { labels: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } } },
+                     animation: { duration: 1500, delay: 500 },
                      scales: {
                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 } } },
                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 9 } } }
@@ -285,9 +303,14 @@ export default function HqAnalytics() {
                    }}
                  />
                </div>
-            </div>
+            </motion.div>
 
-            <div className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-[#24150e] rounded-3xl p-6 border border-white/5 shadow-2xl h-[400px]"
+            >
               <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 flex items-center gap-2">
                 <PieChartIcon size={14} className="text-[var(--color-elephant-gold)]"/> Elephant Type Breakdown (All Ranges)
               </h3>
@@ -315,6 +338,7 @@ export default function HqAnalytics() {
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 3000 },
                     scales: {
                       r: {
                         angleLines: { color: 'rgba(255,255,255,0.1)' },
@@ -327,11 +351,16 @@ export default function HqAnalytics() {
                   }}
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Heatmap Section */}
-          <div className="bg-[#24150e] rounded-[40px] p-8 border border-white/5 shadow-2xl overflow-hidden mb-12">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-[#24150e] rounded-[40px] p-8 border border-white/5 shadow-2xl overflow-hidden mb-12"
+          >
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)] flex items-center gap-3">
                 <Calendar size={18} /> Range × Month Distribution Heatmap
@@ -349,11 +378,18 @@ export default function HqAnalytics() {
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(PIVOT).map(([range, vals]) => {
+                  {Object.entries(PIVOT).map(([range, vals], ri) => {
                     const total = vals.reduce((a,b) => a+b, 0);
                     const max = Math.max(...Object.values(PIVOT).flat());
                     return (
-                      <tr key={range} className="group hover:bg-white/5 transition-colors border-b border-white/5">
+                      <motion.tr 
+                        key={range} 
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ delay: ri * 0.05 }}
+                        viewport={{ once: true }}
+                        className="group hover:bg-white/5 transition-colors border-b border-white/5"
+                      >
                         <td className="py-4 px-6 font-bold text-sm text-white/80 sticky left-0 bg-[#24150e] z-10 border-r border-white/5">{range}</td>
                         {vals.map((v, i) => {
                           const p = v / max;
@@ -364,23 +400,27 @@ export default function HqAnalytics() {
                           
                           return (
                             <td key={i} className="p-1 text-center">
-                              <div 
+                              <motion.div 
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                transition={{ delay: (ri * 0.05) + (i * 0.01) }}
+                                viewport={{ once: true }}
                                 className="w-full h-10 flex items-center justify-center rounded-lg text-[10px] font-black"
                                 style={{ backgroundColor: bg, color: p > 0.3 ? 'white' : 'rgba(255,255,255,0.4)' }}
                               >
                                 {v || '-'}
-                              </div>
+                              </motion.div>
                             </td>
                           );
                         })}
                         <td className="py-4 px-6 text-right font-black text-sm text-[var(--color-elephant-gold)]">{total.toLocaleString()}</td>
-                      </tr>
+                      </motion.tr>
                     );
                   })}
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
