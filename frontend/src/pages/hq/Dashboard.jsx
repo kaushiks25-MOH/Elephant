@@ -120,7 +120,9 @@ export default function HqDashboard() {
       {/* Mobile Header */}
       <div className="md:hidden sticky top-0 z-50 bg-[#1a0f0a] text-white flex items-center justify-between p-4 shadow-md border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-10 h-10 flex items-center justify-center text-xl shadow-lg border border-[#E8A82A]/40">🐘</div>
+          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-xl w-10 h-10 flex items-center justify-center shadow-lg border border-[#E8A82A]/40 overflow-hidden">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
           <div>
             <h1 className="font-[family-name:var(--font-playfair)] font-bold text-base leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1>
             <p className="text-[9px] text-white/50 tracking-widest uppercase">HQ Dashboard</p>
@@ -141,7 +143,9 @@ export default function HqDashboard() {
 
       <div className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-[#1a0f0a] text-white flex-col shadow-2xl z-20 border-r border-white/10">
         <div className="p-6 border-b border-white/10 flex items-center gap-3">
-          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1 rounded-2xl w-14 h-14 flex items-center justify-center text-3xl shadow-lg border border-[#E8A82A]/40">🐘</div>
+          <div className="bg-[var(--color-elephant-amber)] text-[var(--color-elephant-coffee)] p-1.5 rounded-2xl w-14 h-14 flex items-center justify-center shadow-lg border border-[#E8A82A]/40 overflow-hidden">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
           <div><h1 className="font-[family-name:var(--font-playfair)] font-bold text-xl leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1><p className="text-[10px] text-white/50 tracking-widest uppercase mt-0.5">HQ Dashboard</p></div>
         </div>
         <div className="flex-1 py-6 flex flex-col gap-2"><NavigationLinks /></div>
@@ -163,37 +167,36 @@ export default function HqDashboard() {
             </button>
           </div>
 
-          {/* KPI Row */}
+      {/* KPI Row */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5 mb-8">
-            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-blue-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><FileText size={14} className="text-blue-400"/> Total Logs</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{stats.totalReports}</div>
+            <div className="bg-[#24150e] border border-white/5 rounded-[32px] p-6 relative overflow-hidden shadow-2xl group">
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-500"></div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-3 flex items-center gap-2"><FileText size={14} className="text-blue-400"/> Total Logs</div>
+              <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-white">{stats.totalReports}</div>
             </div>
             
-            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[var(--color-elephant-amber)] opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><Bell size={14} className="text-[var(--color-elephant-amber)]"/> Active Alerts</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{stats.activeAlerts}</div>
+            <div className="bg-[#24150e] border border-white/5 rounded-[32px] p-6 relative overflow-hidden shadow-2xl group">
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-[var(--color-elephant-gold)]"></div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-3 flex items-center gap-2"><Bell size={14} className="text-[var(--color-elephant-gold)]"/> Active Alerts</div>
+              <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-white">{stats.activeAlerts}</div>
             </div>
 
-            <div className="bg-[#2a0f0a] border border-red-900/30 rounded-2xl p-5 relative overflow-hidden shadow-lg group col-span-2 md:col-span-1 lg:col-span-1">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-red-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-red-400 mb-3 flex items-center gap-2"><AlertTriangle size={14}/> High Risk</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-red-500">{stats.highSeverity}</div>
+            <div className="bg-[#2a0f0a] border border-red-900/30 rounded-[32px] p-6 relative overflow-hidden shadow-2xl group col-span-2 md:col-span-1 lg:col-span-1">
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-red-500"></div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-400 mb-3 flex items-center gap-2"><AlertTriangle size={14}/> High Risk</div>
+              <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-red-500">{stats.highSeverity}</div>
             </div>
 
-            {/* Tamil Nadu Specific Mock KPIs for depth */}
-            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-green-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><ShieldCheck size={14} className="text-green-500"/> Clearance Logs</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{reports.filter(r => r.report_type === 'CLEARANCE').length}</div>
+            <div className="bg-[#24150e] border border-white/5 rounded-[32px] p-6 relative overflow-hidden shadow-2xl group">
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-green-500"></div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-3 flex items-center gap-2"><ShieldCheck size={14} className="text-green-500"/> Clearance Logs</div>
+              <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-white">{reports.filter(r => r.report_type === 'CLEARANCE').length}</div>
             </div>
 
-            <div className="bg-[#24150e] border border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-lg group">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-purple-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-3 flex items-center gap-2"><Mic size={14} className="text-purple-400"/> Voice Proofs</div>
-              <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white">{reports.filter(r => r.voice_url).length}</div>
+            <div className="bg-[#24150e] border border-white/5 rounded-[32px] p-6 relative overflow-hidden shadow-2xl group">
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-purple-500"></div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-3 flex items-center gap-2"><Mic size={14} className="text-purple-400"/> Voice Proofs</div>
+              <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-white">{reports.filter(r => r.voice_url).length}</div>
             </div>
           </div>
 

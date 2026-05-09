@@ -5,11 +5,18 @@ import { lazy, Suspense } from 'react';
 const ReportForm  = lazy(() => import('./pages/field/ReportForm'));
 const HqDashboard = lazy(() => import('./pages/hq/Dashboard'));
 const HqReports   = lazy(() => import('./pages/hq/Reports'));
+const Landing     = lazy(() => import('./pages/Landing'));
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-[#F8F3EC] flex flex-col items-center justify-center gap-4 font-[family-name:var(--font-dm)]">
-    <div className="text-6xl animate-bounce">🐘</div>
-    <p className="text-sm font-bold tracking-widest uppercase text-[#5C3D2E]/60">Accessing System...</p>
+  <div className="min-h-screen bg-[#2C1810] flex flex-col items-center justify-center gap-6 font-[family-name:var(--font-dm)]">
+    <div className="w-32 h-32 relative">
+      <div className="absolute inset-0 bg-[var(--color-elephant-gold)]/20 rounded-full animate-ping"></div>
+      <img src="/logo.png" alt="Loading..." className="w-full h-full object-contain relative z-10 animate-pulse" />
+    </div>
+    <div className="space-y-2 text-center">
+      <p className="text-sm font-black tracking-[0.3em] uppercase text-[var(--color-elephant-gold)]">AECRCMC</p>
+      <p className="text-[10px] font-bold tracking-widest uppercase text-white/30">Accessing Intelligence System...</p>
+    </div>
   </div>
 );
 
@@ -18,8 +25,8 @@ function App() {
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Landing goes to Report Filing by default */}
-          <Route path="/" element={<Navigate to="/report" replace />} />
+          {/* Landing Page */}
+          <Route path="/" element={<Landing />} />
           
           {/* View 1: Alert Filing / Reporting Form (Public) */}
           <Route path="/report" element={<ReportForm />} />
@@ -30,8 +37,8 @@ function App() {
           {/* Optional: Full Reports View (Public) */}
           <Route path="/reports" element={<HqReports />} />
 
-          {/* Catch all back to report */}
-          <Route path="*" element={<Navigate to="/report" replace />} />
+          {/* Catch all back to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
