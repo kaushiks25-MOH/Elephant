@@ -98,9 +98,11 @@ const Nav = ({ setIsMobileMenuOpen }) => (
     </Link>
     
     <div className="hidden lg:flex items-center gap-1">
-      {['About', 'Project', 'Objectives', 'Activities', 'Dashboard', 'GIS Map', 'Volunteers'].map((item) => (
+      {['About', 'Project', 'Objectives', 'Activities', 'Volunteers'].map((item) => (
         <a key={item} href={`#${item.toLowerCase().replace(' ', '')}`} className="text-white/70 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">{item}</a>
       ))}
+      <Link to="/dashboard" className="text-white/70 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">Dashboard</Link>
+      <Link to="/analytics" className="text-white/70 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all">Analytics</Link>
       <Link to="/contact" className="ml-4 bg-[var(--color-elephant-gold)] text-[var(--color-elephant-coffee)] px-6 py-2.5 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[var(--color-elephant-gold)]/20">
         Contact Us
       </Link>
