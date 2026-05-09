@@ -9,9 +9,11 @@ const Landing     = lazy(() => import('./pages/Landing'));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-[#2C1810] flex flex-col items-center justify-center gap-6 font-[family-name:var(--font-dm)]">
-    <div className="w-48 h-48 relative flex items-center justify-center">
-      <div className="absolute inset-0 bg-[var(--color-elephant-gold)]/10 rounded-full animate-pulse blur-2xl"></div>
-      <img src="/logo.png" alt="Loading..." className="w-full h-full object-contain relative z-10" />
+    <div className="w-72 h-72 relative flex items-center justify-center">
+      <div className="absolute -inset-10 bg-[var(--color-elephant-gold)]/10 rounded-full animate-pulse blur-3xl"></div>
+      <div className="absolute -inset-2 border-2 border-dashed border-[var(--color-elephant-gold)]/40 rounded-full animate-[spin_12s_linear_infinite]"></div>
+      <div className="absolute -inset-6 border border-[var(--color-elephant-gold)]/10 rounded-full"></div>
+      <img src="/logo.png" alt="Loading..." className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(232,168,42,0.2)]" />
     </div>
     <div className="space-y-2 text-center">
       <p className="text-sm font-black tracking-[0.3em] uppercase text-[var(--color-elephant-gold)]">AECRCMC</p>
