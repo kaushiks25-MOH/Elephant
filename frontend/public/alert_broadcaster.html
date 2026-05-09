@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AECRCMC | Emergency Broadcaster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,900;1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-elephant-coffee: #2C1810;
+            --color-elephant-gold: #E8A82A;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--color-elephant-coffee);
+            color: white;
+            overflow-x: hidden;
+        }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-red { animation: pulse-red 2s infinite; }
+    </style>
+</head>
+<body class="min-h-screen p-6 md:p-12">
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#2C1810]">
+        <div class="max-w-sm w-full glass p-10 rounded-[48px] text-center">
+            <div class="w-20 h-20 bg-yellow-500/10 rounded-3xl flex items-center justify-center text-yellow-500 mx-auto mb-8 border border-yellow-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h2 class="text-2xl font-playfair font-black mb-2">Secure Access</h2>
+            <p class="text-[10px] text-white/30 uppercase tracking-[0.2em] mb-8 font-black">Authorized Personnel Only</p>
+            
+            <div class="space-y-6">
+                <input id="pin-input" type="password" maxlength="4" placeholder="••••" class="w-full bg-black/40 border-2 border-white/5 rounded-2xl py-6 text-center text-3xl tracking-[0.5em] focus:outline-none focus:border-[#E8A82A] transition-all">
+                <p id="pin-error" class="text-red-500 text-[10px] font-black uppercase tracking-widest hidden">Invalid Access Code</p>
+                <button onclick="verifyPin()" class="w-full bg-[#E8A82A] text-[#2C1810] py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-all">Verify Identity</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden initially) -->
+    <div id="main-content" class="hidden max-w-2xl mx-auto">
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-red-500 animate-ping"></div>
+                <span class="text-[10px] font-black uppercase tracking-[0.3em] text-red-500">Emergency Protocol Active</span>
+            </div>
+            <img src="/logo.png" alt="Logo" class="h-10 opacity-50">
+        </div>
+
+        <div class="mb-12">
+            <h1 class="font-playfair text-5xl font-black leading-tight mb-4">
+                Alert <span class="text-[#E8A82A] italic">Broadcaster</span>
+            </h1>
+            <p class="text-lg text-white/40 font-medium">
+                Broadcast emergency notifications directly to the field network.
+            </p>
+        </div>
+
+        <div class="space-y-8">
+            <!-- Severity -->
+            <div class="glass p-8 rounded-[40px]">
+                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-[#E8A82A] mb-6 block">Notification Priority</label>
+                <div class="grid grid-cols-3 gap-4">
+                    <button onclick="setSeverity('LOW')" class="sev-btn py-4 rounded-2xl text-xs font-black uppercase tracking-widest border-2 border-white/5 bg-black/20 text-white/40" id="btn-LOW">Low</button>
+                    <button onclick="setSeverity('MEDIUM')" class="sev-btn py-4 rounded-2xl text-xs font-black uppercase tracking-widest border-2 border-white/5 bg-black/20 text-white/40" id="btn-MEDIUM">Medium</button>
+                    <button onclick="setSeverity('HIGH')" class="sev-btn py-4 rounded-2xl text-xs font-black uppercase tracking-widest border-2 border-[#E8A82A] bg-white/10 text-white" id="btn-HIGH">Critical</button>
+                </div>
+            </div>
+
+            <!-- Inputs -->
+            <div class="glass p-8 rounded-[40px] space-y-6">
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-3 block">Alert Heading</label>
+                    <input id="alert-title" type="text" placeholder="e.g. 🚨 EMERGENCY: ROAD CLOSED" class="w-full bg-black/20 border border-white/5 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#E8A82A] transition-colors font-bold">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-3 block">Message Content</label>
+                    <textarea id="alert-message" placeholder="Enter detailed warning..." class="w-full bg-black/20 border border-white/5 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-[#E8A82A] transition-colors min-h-[150px] resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <button onclick="launchBroadcast()" id="broadcast-btn" class="w-full py-8 rounded-[32px] bg-[#E8A82A] text-[#2C1810] font-black text-xl flex items-center justify-center gap-4 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-2xl">
+                <span>Launch Emergency Broadcast</span>
+            </button>
+            <p id="status-msg" class="text-center text-sm font-bold text-green-500 hidden">Broadcast successfully launched!</p>
+        </div>
+    </div>
+
+    <script>
+        const MASTER_PIN = '2026';
+        const SUPABASE_URL = 'https://flqxbiezgwrvwkqcfiri.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZscXhiaWV6Z3dydndrcWNmaXJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODA4ODcsImV4cCI6MjA5MzY1Njg4N30.xZAwwMdeXOiGXTURxYiBWADHTBkJ2JFziD1DW9Ev6hw';
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let currentSeverity = 'HIGH';
+
+        function verifyPin() {
+            const input = document.getElementById('pin-input').value;
+            const error = document.getElementById('pin-error');
+            if (input === MASTER_PIN) {
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('main-content').classList.remove('hidden');
+            } else {
+                error.classList.remove('hidden');
+                document.getElementById('pin-input').value = '';
+                setTimeout(() => error.classList.add('hidden'), 2000);
+            }
+        }
+
+        function setSeverity(sev) {
+            currentSeverity = sev;
+            document.querySelectorAll('.sev-btn').forEach(btn => {
+                btn.classList.remove('border-[#E8A82A]', 'bg-white/10', 'text-white');
+                btn.classList.add('border-white/5', 'bg-black/20', 'text-white/40');
+            });
+            document.getElementById('btn-' + sev).classList.add('border-[#E8A82A]', 'bg-white/10', 'text-white');
+            document.getElementById('btn-' + sev).classList.remove('border-white/5', 'bg-black/20', 'text-white/40');
+        }
+
+        async function launchBroadcast() {
+            const title = document.getElementById('alert-title').value;
+            const message = document.getElementById('alert-message').value;
+            const btn = document.getElementById('broadcast-btn');
+            const status = document.getElementById('status-msg');
+
+            if (!title || !message) {
+                alert('Please fill in both title and message.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = 'Broadcasting...';
+
+            const { error } = await supabaseClient.from('reports').insert({
+                user_id: '00000000-0000-0000-0000-000000000000', // Institutional ID
+                elephant_count: 0,
+                severity: currentSeverity,
+                notes: `${title}|${message}`,
+                latitude: 11.0168,
+                longitude: 76.9558,
+                report_type: 'MANUAL',
+                range: 'HQ'
+            });
+
+            if (error) {
+                alert('Error: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Launch Emergency Broadcast';
+            } else {
+                btn.classList.replace('bg-[#E8A82A]', 'bg-green-500');
+                btn.innerHTML = 'Broadcast Launched!';
+                status.classList.remove('hidden');
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>

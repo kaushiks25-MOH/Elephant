@@ -12,6 +12,7 @@ export default function TamilReportForm() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState('');
   const [notes, setNotes] = useState('');
+  const [selectedRange, setSelectedRange] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -104,6 +105,7 @@ export default function TamilReportForm() {
         notes: finalNotes,
         latitude: location?.lat,
         longitude: location?.lng,
+        range: selectedRange,
         imageFile: image,
         voiceFile: audioBlob,
         reportType: reportType,
@@ -166,6 +168,30 @@ export default function TamilReportForm() {
               <p className="text-sm font-medium text-red-400">{locationError || 'GPS தேடப்படுகிறது...'}</p>
             </div>
           )}
+        </div>
+
+        {/* Range Selection */}
+        <div className="bg-[#24150e] p-6 rounded-3xl shadow-xl border border-white/5">
+          <label className="font-bold text-white/50 text-[10px] uppercase tracking-widest flex items-center gap-2 mb-4">வனச்சரகம் (Range)</label>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { id: 'Coimbatore', label: 'கோயம்புத்தூர்' },
+              { id: 'Mettupalayam', label: 'மேட்டுப்பாளையம்' },
+              { id: 'Sirumugai', label: 'சிறுமுகை' },
+              { id: 'Periyanaickenpalayam', label: 'பெரியநாயக்கன்பாளையம்' },
+              { id: 'Karamadai', label: 'காரமடை' },
+              { id: 'Madukkarai', label: 'மதுக்கரை' }
+            ].map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => setSelectedRange(r.id)}
+                className={`py-3 px-2 rounded-2xl text-[10px] font-black uppercase border-2 transition-all ${selectedRange === r.id ? 'bg-[var(--color-elephant-gold)] text-black border-[var(--color-elephant-gold)]' : 'bg-black/10 border-white/5 text-white/40'}`}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <AnimatePresence mode="wait">

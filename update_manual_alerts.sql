@@ -1,4 +1,7 @@
--- Update OneSignal Notification Function to support MANUAL alerts
+-- 1. Add range column to reports table if it doesn't exist
+ALTER TABLE public.reports ADD COLUMN IF NOT EXISTS range TEXT;
+
+-- 2. Update OneSignal Notification Function to support MANUAL alerts
 CREATE OR REPLACE FUNCTION public.send_onesignal_notification()
 RETURNS TRIGGER AS $$
 DECLARE

@@ -9,6 +9,7 @@ export async function submitReport({
   notes, 
   latitude, 
   longitude, 
+  range,
   imageFile,
   voiceFile, // New
   reportType = 'SIGHTING',
@@ -45,6 +46,7 @@ export async function submitReport({
       notes: notes,
       latitude: latitude,
       longitude: longitude,
+      range: range,
       image_url: imageUrl,
       voice_url: voiceUrl, // New
       report_type: reportType,
@@ -90,5 +92,25 @@ export async function fetchAnalytics() {
     supabase.from('alerts').select('*', { count: 'exact', head: true }).eq('status', 'UNREAD'),
     supabase.from('reports').select('*', { count: 'exact', head: true }).eq('severity', 'HIGH')
   ]);
-  return { totalReports, activeAlerts, highSeverity };
+
+  // Fetch range-wise status
+  const { data: rangeData } = await supabase
+    .from('reports')
+    .select('range, severity, created_at')
+    .order('created_at', { ascending: false });
+
+  const ranges = ['Coimbatore', 'Mettupalayam', 'Sirumugai', 'Periyanaickenpalayam', 'Karamadai', 'Madukkarai'];
+  const rangeStatus = ranges.map(r => {
+    const rangeReports = rangeData?.filter(rd => rd.range === r) || [];
+    const hasActiveAlert = rangeReports.some(rd => rd.severity === 'HIGH' && (new Date() - new Date(rd.created_at)) < 86400000); // Active if < 24h
+    return {
+      name: r,
+      status: hasActiveAlert ? 'Alert' : (rangeReports.length > 0 ? 'Active' : 'Clear'),
+      count: rangeReports.length,
+      lastSync: rangeReports[0] ? new Date(rangeReports[0].created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A',
+      color: hasActiveAlert ? 'bg-red-500' : (rangeReports.length > 0 ? 'bg-orange-500' : 'bg-green-500')
+    };
+  });
+
+  return { totalReports, activeAlerts, highSeverity, rangeStatus };
 }

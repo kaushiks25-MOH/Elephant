@@ -51,7 +51,7 @@ function MapUpdater({ center }) {
 }
 
 export default function HqDashboard() {
-  const [stats, setStats] = useState({ totalReports: 0, activeAlerts: 0, highSeverity: 0 });
+  const [stats, setStats] = useState({ totalReports: 0, activeAlerts: 0, highSeverity: 0, rangeStatus: [] });
   const [reports, setReports] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -325,24 +325,17 @@ export default function HqDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {[
-                      {r: 'Coimbatore', s: 'Alert', c: 18, t: '14:30', cl: 'bg-red-500'},
-                      {r: 'Mettupalayam', s: 'Alert', c: 12, t: '14:32', cl: 'bg-red-500'},
-                      {r: 'Sirumugai', s: 'Active', c: 7, t: '08:40', cl: 'bg-orange-500'},
-                      {r: 'Periyanaickenpalayam', s: 'Active', c: 5, t: '07:15', cl: 'bg-orange-500'},
-                      {r: 'Karamadai', s: 'Clear', c: 5, t: '06:20', cl: 'bg-green-500'},
-                      {r: 'Madukkarai', s: 'Clear', c: 0, t: '04:00', cl: 'bg-green-500'}
-                    ].map((row, i) => (
+                    {(stats.rangeStatus || []).map((row, i) => (
                       <tr key={i} className="hover:bg-white/5 transition-colors group">
-                        <td className="py-4 px-2 font-bold text-white">{row.r}</td>
+                        <td className="py-4 px-2 font-bold text-white">{row.name}</td>
                         <td className="py-4 px-2">
                           <span className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full ${row.cl} animate-pulse`}></span>
-                            {row.s}
+                            <span className={`w-2 h-2 rounded-full ${row.color} ${row.status === 'Alert' ? 'animate-pulse' : ''}`}></span>
+                            {row.status}
                           </span>
                         </td>
-                        <td className="py-4 px-2 font-black text-[var(--color-elephant-gold)]">{row.c}</td>
-                        <td className="py-4 px-2 text-right text-white/40">{row.t}</td>
+                        <td className="py-4 px-2 font-black text-[var(--color-elephant-gold)]">{row.count}</td>
+                        <td className="py-4 px-2 text-right text-white/40">{row.lastSync}</td>
                       </tr>
                     ))}
                   </tbody>
