@@ -16,6 +16,9 @@ import {
 import { supabase } from '../../lib/supabase';
 
 export default function AlertBroadcaster() {
+  const [pin, setPin] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [pinError, setPinError] = useState(false);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState('HIGH');
@@ -23,20 +26,32 @@ export default function AlertBroadcaster() {
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
+  const MASTER_PIN = '2026'; // Institutional Access Code
+
+  const handlePinSubmit = (e) => {
+    e.preventDefault();
+    if (pin === MASTER_PIN) {
+      setIsAuthenticated(true);
+      setPinError(false);
+    } else {
+      setPinError(true);
+      setPin('');
+      setTimeout(() => setPinError(false), 2000);
+    }
+  };
+
   const handleBroadcast = async (e) => {
     e.preventDefault();
     if (!title || !message) return;
 
     setIsSubmitting(true);
     try {
-      // We use the 'reports' table with report_type = 'MANUAL'
-      // The trigger will parse Title|Message
       const { error } = await supabase.from('reports').insert({
-        user_id: '00000000-0000-0000-0000-000000000000', // System user
+        user_id: '00000000-0000-0000-0000-000000000000', 
         elephant_count: 0,
         severity: severity,
         notes: `${title}|${message}`,
-        latitude: 11.0168, // Coimbatore Default
+        latitude: 11.0168, 
         longitude: 76.9558,
         report_type: 'MANUAL'
       });
@@ -54,6 +69,68 @@ export default function AlertBroadcaster() {
       setIsSubmitting(false);
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[var(--color-elephant-coffee)] flex flex-col items-center justify-center p-6 relative overflow-hidden font-[family-name:var(--font-dm)]">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-elephant-gold)]/5 rounded-full blur-[120px]"></div>
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-sm w-full bg-[#1a0f0a] p-10 rounded-[48px] border border-white/5 shadow-2xl text-center relative z-10"
+        >
+          <div className="w-20 h-20 bg-[var(--color-elephant-gold)]/10 rounded-3xl flex items-center justify-center text-[var(--color-elephant-gold)] mx-auto mb-8 border border-[var(--color-elephant-gold)]/20 shadow-inner">
+            <ShieldAlert size={32} />
+          </div>
+          <h2 className="text-2xl font-[family-name:var(--font-playfair)] font-black text-white mb-2">Secure Access</h2>
+          <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] mb-8 font-black">Authorized Personnel Only</p>
+          
+          <form onSubmit={handlePinSubmit} className="space-y-6">
+            <div className="relative">
+              <input 
+                type="password" 
+                maxLength={4}
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                placeholder="••••"
+                className={`w-full bg-black/40 border-2 rounded-2xl py-6 text-center text-3xl tracking-[0.5em] focus:outline-none transition-all ${pinError ? 'border-red-500 animate-shake' : 'border-white/5 focus:border-[var(--color-elephant-gold)]'}`}
+                autoFocus
+              />
+              <AnimatePresence>
+                {pinError && (
+                  <motion.p 
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="text-red-500 text-[10px] font-black uppercase tracking-widest mt-4"
+                  >
+                    Invalid Access Code
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+            <button 
+              type="submit"
+              className="w-full bg-[var(--color-elephant-gold)] text-[var(--color-elephant-coffee)] py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all"
+            >
+              Verify Identity
+            </button>
+            <button 
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="text-white/20 hover:text-white/40 text-[10px] font-black uppercase tracking-widest transition-colors mt-4"
+            >
+              Cancel & Exit
+            </button>
+          </form>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--color-elephant-coffee)] font-[family-name:var(--font-dm)] text-white p-6 md:p-12 relative overflow-hidden">
