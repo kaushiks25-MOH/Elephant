@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck } from 'lucide-react';
+import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck, Home } from 'lucide-react';
 import { fetchReports, fetchAnalytics, fetchActiveAlerts } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -105,11 +105,15 @@ export default function HqDashboard() {
 
   const NavigationLinks = () => (
     <>
-      <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white whitespace-nowrap md:rounded-none">
-        <MapIcon size={20} className="text-[var(--color-elephant-gold)]" /> <span className="font-medium text-sm">Live Dashboard</span>
+      <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 text-white/60 hover:bg-white/5 hover:text-white transition-colors whitespace-nowrap md:rounded-none">
+        <Home size={20} /> <span className="font-medium text-sm">Back to Home</span>
       </Link>
-      <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 px-6 py-4 text-white/60 hover:bg-white/5 hover:text-white transition-colors whitespace-nowrap md:rounded-none">
-        <FileText size={20} /> <span className="font-medium text-sm">All Reports</span>
+      <div className="h-px bg-white/5 mx-6 my-2"></div>
+      <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/dashboard' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
+        <MapIcon size={20} className={useLocation().pathname === '/dashboard' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">Live Dashboard</span>
+      </Link>
+      <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/reports' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
+        <FileText size={20} className={useLocation().pathname === '/reports' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">All Reports</span>
       </Link>
     </>
   );

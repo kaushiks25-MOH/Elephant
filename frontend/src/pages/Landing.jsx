@@ -116,97 +116,114 @@ const Nav = ({ setIsMobileMenuOpen }) => (
 
 export default function Landing() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scriptsReady, setScriptsReady] = useState(false);
   const donutRef = useRef(null);
   const barRef = useRef(null);
   const radarRef = useRef(null);
   const mapRef = useRef(null);
+  const mapInstance = useRef(null);
 
   useEffect(() => {
-    // ---- Charts ----
-    const donutCtx = donutRef.current?.getContext('2d');
-    if (donutCtx) {
-      new window.Chart(donutCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Lone Male', 'Female Group', 'Male Group', 'Female+Calf', 'Single Female', 'Unidentified', 'Makhna'],
-          datasets: [{
-            data: [1978, 1219, 1035, 637, 154, 47, 12],
-            backgroundColor: ['#E53935', '#27AE60', '#E67E22', '#2980B9', '#8E44AD', '#7B4F2E', '#16A085'],
-            borderWidth: 2, borderColor: '#fff'
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, cutout: '65%',
-          plugins: { legend: { display: false } }
-        }
-      });
-    }
-
-    const barCtx = barRef.current?.getContext('2d');
-    if (barCtx) {
-      new window.Chart(barCtx, {
-        type: 'bar',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-          datasets: [{
-            label: 'Incidents',
-            data: [534, 359, 419, 385, 344, 218, 204, 164],
-            backgroundColor: ['#C17F3A', '#C17F3A', '#C17F3A', '#C17F3A', '#C17F3A', '#7FB07A', '#7FB07A', '#7FB07A'],
-            borderRadius: 4
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { grid: { display: false } },
-            y: { grid: { color: 'rgba(0,0,0,0.04)' } }
-          }
-        }
-      });
-    }
-
-    const radarCtx = radarRef.current?.getContext('2d');
-    if (radarCtx) {
-      new window.Chart(radarCtx, {
-        type: 'radar',
-        data: {
-          labels: ['Mettupalayam', 'Periyanaicken.', 'Coimbatore', 'Boluvampatty', 'Sirumughai', 'Karamadai', 'Madhukkarai'],
-          datasets: [{
-            label: 'Incidents 2025',
-            data: [644, 515, 498, 413, 212, 186, 162],
-            backgroundColor: 'rgba(193,127,58,0.15)',
-            borderColor: '#C17F3A',
-            borderWidth: 2,
-            pointBackgroundColor: '#C17F3A',
-            pointRadius: 4
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { r: { grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { display: false } } }
-        }
-      });
-    }
-
-    // ---- Leaflet Map ----
-    if (window.L && mapRef.current) {
-      const map = window.L.map(mapRef.current).setView([11.15, 76.87], 11);
-      window.L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '© OpenStreetMap © CartoDB', maxZoom: 18
-      }).addTo(map);
-
-      gpsPoints.forEach(pt => {
-        const color = rangeColors[pt.r] || '#999';
-        const circle = window.L.circleMarker([pt.lat, pt.lng], {
-          radius: 5, fillColor: color, color: 'rgba(255,255,255,0.3)',
-          weight: 1, fillOpacity: 0.75
-        }).addTo(map);
-        circle.bindPopup(`<strong style="color:${color}">${pt.r}</strong><br>📍 ${pt.lat.toFixed(4)}, ${pt.lng.toFixed(4)}<br><small>Elephant straying incident</small>`);
-      });
-    }
+    const checkScripts = setInterval(() => {
+      if (window.Chart && window.L) {
+        setScriptsReady(true);
+        clearInterval(checkScripts);
+      }
+    }, 100);
+    return () => clearInterval(checkScripts);
   }, []);
+
+    if (!scriptsReady) return;
+
+    try {
+      // ---- Charts ----
+      const donutCtx = donutRef.current?.getContext('2d');
+      if (donutCtx && window.Chart) {
+        new window.Chart(donutCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Lone Male', 'Female Group', 'Male Group', 'Female+Calf', 'Single Female', 'Unidentified', 'Makhna'],
+            datasets: [{
+              data: [1978, 1219, 1035, 637, 154, 47, 12],
+              backgroundColor: ['#E53935', '#27AE60', '#E67E22', '#2980B9', '#8E44AD', '#7B4F2E', '#16A085'],
+              borderWidth: 2, borderColor: '#fff'
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false, cutout: '65%',
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      const barCtx = barRef.current?.getContext('2d');
+      if (barCtx && window.Chart) {
+        new window.Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+            datasets: [{
+              label: 'Incidents',
+              data: [534, 359, 419, 385, 344, 218, 204, 164],
+              backgroundColor: ['#C17F3A', '#C17F3A', '#C17F3A', '#C17F3A', '#C17F3A', '#7FB07A', '#7FB07A', '#7FB07A'],
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false } },
+              y: { grid: { color: 'rgba(0,0,0,0.04)' } }
+            }
+          }
+        });
+      }
+
+      const radarCtx = radarRef.current?.getContext('2d');
+      if (radarCtx && window.Chart) {
+        new window.Chart(radarCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Mettupalayam', 'Periyanaicken.', 'Coimbatore', 'Boluvampatty', 'Sirumughai', 'Karamadai', 'Madhukkarai'],
+            datasets: [{
+              label: 'Incidents 2025',
+              data: [644, 515, 498, 413, 212, 186, 162],
+              backgroundColor: 'rgba(193,127,58,0.15)',
+              borderColor: '#C17F3A',
+              borderWidth: 2,
+              pointBackgroundColor: '#C17F3A',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { r: { grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { display: false } } }
+          }
+        });
+      }
+
+      // ---- Leaflet Map ----
+      if (window.L && mapRef.current && !mapInstance.current) {
+        mapInstance.current = window.L.map(mapRef.current).setView([11.15, 76.87], 11);
+        window.L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '© OpenStreetMap © CartoDB', maxZoom: 18
+        }).addTo(mapInstance.current);
+
+        gpsPoints.forEach(pt => {
+          const color = rangeColors[pt.r] || '#999';
+          const circle = window.L.circleMarker([pt.lat, pt.lng], {
+            radius: 5, fillColor: color, color: 'rgba(255,255,255,0.3)',
+            weight: 1, fillOpacity: 0.75
+          }).addTo(mapInstance.current);
+          circle.bindPopup(`<strong style="color:${color}">${pt.r}</strong><br>📍 ${pt.lat.toFixed(4)}, ${pt.lng.toFixed(4)}<br><small>Elephant straying incident</small>`);
+        });
+      }
+    } catch (e) {
+      console.error("Initialization error:", e);
+    }
+  }, [scriptsReady]);
 
   return (
     <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] text-[var(--color-elephant-coffee)] overflow-x-hidden">
