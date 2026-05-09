@@ -7,6 +7,8 @@ const HqDashboard = lazy(() => import('./pages/hq/Dashboard'));
 const HqReports   = lazy(() => import('./pages/hq/Reports'));
 const HqAnalytics = lazy(() => import('./pages/hq/Analytics'));
 const Landing     = lazy(() => import('./pages/Landing'));
+const AllReports = lazy(() => import('./pages/hq/AllReports'));
+const AlertBroadcaster = lazy(() => import('./pages/hq/AlertBroadcaster'));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-[#2C1810] flex flex-col items-center justify-center gap-6 font-[family-name:var(--font-dm)]">
@@ -42,6 +44,8 @@ function App() {
           
           {/* Analytics View (Public) */}
           <Route path="/analytics" element={<HqAnalytics />} />
+          <Route path="/reports" element={<AllReports />} />
+          <Route path="/broadcast" element={<AlertBroadcaster />} />
 
           {/* Catch all back to home */}
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -11,7 +11,8 @@ import {
   Menu, 
   X,
   Search,
-  Filter
+  Filter,
+  Radio
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -90,6 +91,9 @@ export default function HqAnalytics() {
       </Link>
       <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/reports' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
         <FileText size={20} className={useLocation().pathname === '/reports' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">All Reports</span>
+      </Link>
+      <Link to="/broadcast" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/broadcast' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
+        <Radio size={20} className={useLocation().pathname === '/broadcast' ? "text-red-500" : ""} /> <span className="font-medium text-sm">Broadcast Alert</span>
       </Link>
     </>
   );

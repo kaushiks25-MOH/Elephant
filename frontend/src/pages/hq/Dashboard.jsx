@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck, Home, BarChart3, Users } from 'lucide-react';
+import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck, Home, BarChart3, Users, Radio, Search, Filter } from 'lucide-react';
 import { fetchReports, fetchAnalytics, fetchActiveAlerts } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -117,6 +117,9 @@ export default function HqDashboard() {
       </Link>
       <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/reports' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
         <FileText size={20} className={useLocation().pathname === '/reports' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">All Reports</span>
+      </Link>
+      <Link to="/broadcast" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/broadcast' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
+        <Radio size={20} className={useLocation().pathname === '/broadcast' ? "text-red-500" : ""} /> <span className="font-medium text-sm">Broadcast Alert</span>
       </Link>
     </>
   );
