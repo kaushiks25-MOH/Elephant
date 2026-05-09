@@ -7,7 +7,6 @@ const HqDashboard = lazy(() => import('./pages/hq/Dashboard'));
 const HqReports   = lazy(() => import('./pages/hq/Reports'));
 const HqAnalytics = lazy(() => import('./pages/hq/Analytics'));
 const Landing     = lazy(() => import('./pages/Landing'));
-const AllReports = lazy(() => import('./pages/hq/AllReports'));
 const AlertBroadcaster = lazy(() => import('./pages/hq/AlertBroadcaster'));
 
 const PageLoader = () => (
@@ -39,12 +38,9 @@ function App() {
           {/* View 2: Dashboard / Monitor (Public) */}
           <Route path="/dashboard" element={<HqDashboard />} />
           
-          {/* Optional: Full Reports View (Public) */}
+          {/* HQ Views */}
           <Route path="/reports" element={<HqReports />} />
-          
-          {/* Analytics View (Public) */}
           <Route path="/analytics" element={<HqAnalytics />} />
-          <Route path="/reports" element={<AllReports />} />
           <Route path="/broadcast" element={<AlertBroadcaster />} />
 
           {/* Catch all back to home */}

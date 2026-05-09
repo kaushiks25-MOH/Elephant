@@ -471,8 +471,6 @@ export default function Landing() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
           {/* Hackathon Highlight */}
           <div className="mt-20 bg-gradient-to-br from-[var(--color-elephant-forest)] to-[var(--color-elephant-coffee)] rounded-[40px] p-12 grid lg:grid-cols-2 gap-16 items-center relative overflow-hidden shadow-2xl border border-white/10">
