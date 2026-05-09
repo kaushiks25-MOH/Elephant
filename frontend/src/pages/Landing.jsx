@@ -283,8 +283,8 @@ export default function Landing() {
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative group">
-              <div className="aspect-[4/3] bg-gradient-to-br from-[var(--color-elephant-forest)] to-[var(--color-elephant-moss)] rounded-3xl flex items-center justify-center text-9xl text-white/20 shadow-2xl overflow-hidden relative">
-                🐘
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl relative">
+                <img src="/assets/about.png" className="w-full h-full object-cover" alt="Elephant Conservation" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)]/50 to-transparent"></div>
               </div>
               <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-2xl border border-[var(--color-elephant-border)] max-w-[200px]">
@@ -574,11 +574,13 @@ export default function Landing() {
               </div>
             </div>
             <div className="space-y-6">
-              <div className="aspect-square bg-gradient-to-br from-[var(--color-elephant-forest)] to-[var(--color-elephant-moss)] rounded-[40px] p-16 text-center flex flex-col items-center justify-center space-y-6 shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')] opacity-20"></div>
-                <div className="text-8xl group-hover:scale-110 transition-transform duration-700">🐘</div>
-                <h3 className="text-3xl font-bold text-white leading-tight">Friends of Elephants<br/>Coimbatore</h3>
-                <p className="text-white/70 text-sm leading-relaxed max-w-xs">Launched at Sree Kumaran College with 120+ student volunteers. Bridging youth energy with conservation science.</p>
+              <div className="aspect-square rounded-[40px] overflow-hidden shadow-2xl relative group">
+                <img src="/assets/community.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Community" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)] via-transparent to-transparent opacity-80"></div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 p-12 text-center">
+                  <h3 className="text-3xl font-bold text-white leading-tight">Friends of Elephants<br/>Coimbatore</h3>
+                  <p className="text-white/70 text-sm leading-relaxed max-w-xs">Launched at Sree Kumaran College with 120+ student volunteers. Bridging youth energy with conservation science.</p>
+                </div>
               </div>
               <div className="bg-white border border-[var(--color-elephant-border)] rounded-3xl p-8 shadow-sm">
                 <h4 className="font-bold text-sm mb-6">Recent Programs</h4>
@@ -617,7 +619,7 @@ export default function Landing() {
               { i: "🚂", t: "Railway AI Monitoring", d: "Madukkarai track surveillance", c: "from-[#0D3B2A] to-[#1A5E40]" }
             ].map((img, i) => (
               <div key={i} className={`relative aspect-[4/3] rounded-3xl overflow-hidden group shadow-lg cursor-pointer ${img.lg ? 'md:col-span-2' : ''}`}>
-                <div className={`absolute inset-0 bg-gradient-to-br ${img.c} flex items-center justify-center text-7xl opacity-90 group-hover:scale-110 transition-transform duration-700`}>{img.i}</div>
+                <img src={i === 0 ? "/assets/tech.png" : i === 1 ? "/assets/community.png" : i === 2 ? "/assets/about.png" : "/assets/tech.png"} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={img.t} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)] via-transparent to-transparent opacity-80"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-8">
                   <h4 className="text-lg font-bold text-white mb-1">{img.t}</h4>
