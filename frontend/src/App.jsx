@@ -9,7 +9,7 @@ const Landing     = lazy(() => import('./pages/Landing'));
 
 const PageLoader = () => (
   <div className="min-h-screen bg-[#2C1810] flex flex-col items-center justify-center gap-6 font-[family-name:var(--font-dm)]">
-    <div className="w-32 h-32 relative">
+    <div className="w-48 h-48 relative">
       <div className="absolute inset-0 bg-[var(--color-elephant-gold)]/20 rounded-full animate-ping"></div>
       <img src="/logo.png" alt="Loading..." className="w-full h-full object-contain relative z-10 animate-pulse" />
     </div>

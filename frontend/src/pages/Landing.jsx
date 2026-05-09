@@ -19,8 +19,8 @@ import {
 
 const Nav = ({ setIsMobileMenuOpen }) => (
   <nav className="sticky top-0 z-[1000] bg-[rgba(44,24,16,0.97)] backdrop-blur-xl px-4 md:px-10 flex items-center justify-between h-20 border-b border-[var(--color-elephant-gold)]/20 transition-all">
-    <Link to="/" className="flex items-center gap-3">
-      <div className="w-12 h-12 bg-[var(--color-elephant-amber)] rounded-xl overflow-hidden flex items-center justify-center p-1 border border-[var(--color-elephant-gold)]/30">
+    <Link to="/" className="flex items-center gap-4">
+      <div className="w-16 h-16 bg-white rounded-full overflow-hidden flex items-center justify-center p-0.5 border-2 border-[var(--color-elephant-gold)]/40 shadow-lg shadow-[var(--color-elephant-gold)]/10">
         <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
       </div>
       <div className="text-white">
@@ -163,9 +163,9 @@ export default function Landing() {
       {/* Footer */}
       <footer className="bg-[var(--color-elephant-coffee)] text-white py-20">
         <div className="container mx-auto px-6 text-center space-y-8">
-          <div className="flex items-center justify-center gap-4 mb-10">
-            <div className="w-16 h-16 bg-[var(--color-elephant-amber)] rounded-2xl p-2"><img src="/logo.png" className="w-full h-full object-contain" alt="Logo" /></div>
-            <div className="font-[family-name:var(--font-playfair)] text-3xl font-black">AECRCMC</div>
+          <div className="flex items-center justify-center gap-5 mb-10">
+            <div className="w-20 h-20 bg-white rounded-full p-1 border-2 border-[var(--color-elephant-gold)] shadow-xl"><img src="/logo.png" className="w-full h-full object-contain" alt="Logo" /></div>
+            <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-[var(--color-elephant-gold)]">AECRCMC</div>
           </div>
           <p className="text-white/40 text-sm max-w-lg mx-auto font-medium">Asian Elephant Conservation Research and Conflict Management Centre Coimbatore.</p>
           <div className="pt-10 border-t border-white/5 text-[10px] font-black uppercase text-white/20 tracking-widest">© 2025 Coimbatore Forest Division · TNFD</div>
