@@ -106,6 +106,20 @@
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let currentSeverity = 'HIGH';
+        let userLocation = { lat: 11.0168, lng: 76.9558 }; // Default HQ
+
+        // Fetch Live GPS
+        function fetchGPS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                    console.log('GPS Updated:', userLocation);
+                }, (err) => {
+                    console.warn('GPS Denied or Failed, using default.');
+                }, { enableHighAccuracy: true });
+            }
+        }
+        fetchGPS();
 
         function verifyPin() {
             const input = document.getElementById('pin-input').value;
@@ -113,6 +127,7 @@
             if (input === MASTER_PIN) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
+                fetchGPS(); // Re-fetch on unlock
             } else {
                 error.classList.remove('hidden');
                 document.getElementById('pin-input').value = '';
@@ -145,14 +160,15 @@
             btn.innerHTML = 'Broadcasting...';
 
             const { error } = await supabaseClient.from('reports').insert({
-                user_id: '00000000-0000-0000-0000-000000000000', // Institutional ID
+                user_id: '00000000-0000-0000-0000-000000000000', 
                 elephant_count: 0,
                 severity: currentSeverity,
                 notes: `${title}|${message}`,
-                latitude: 11.0168,
-                longitude: 76.9558,
+                latitude: userLocation.lat,
+                longitude: userLocation.lng,
                 report_type: 'MANUAL',
-                range: 'HQ'
+                range: 'HQ',
+                created_at: new Date().toISOString()
             });
 
             if (error) {

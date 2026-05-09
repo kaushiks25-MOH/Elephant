@@ -11,11 +11,26 @@ export async function submitReport({
   longitude, 
   range,
   imageFile,
-  voiceFile, // New
+  voiceFile,
   reportType = 'SIGHTING',
   isClear = false,
   damageDesc = '',
-  casualties = 0
+  casualties = 0,
+  // New Detailed Fields
+  officerName = '',
+  designation = '',
+  teamMembers = '',
+  bullCount = 0,
+  makhnaCount = 0,
+  maleGroupCount = 0,
+  femaleGroupCount = 0,
+  femaleCalfCount = 0,
+  singleFemaleCount = 0,
+  isDamageCaused = false,
+  damageType = '',
+  chaseStartTime = '',
+  chaseResult = '',
+  remarks = ''
 }) {
   let imageUrl = null;
   let voiceUrl = null;
@@ -31,7 +46,7 @@ export async function submitReport({
 
   // Handle Voice Upload
   if (voiceFile) {
-    const fileName = `voice_${Date.now()}.webm`; // Most browsers use webm for MediaRecorder
+    const fileName = `voice_${Date.now()}.webm`; 
     const { error: voiceError } = await supabase.storage.from('evidence_photos').upload(fileName, voiceFile);
     if (voiceError) throw new Error('Voice upload failed: ' + voiceError.message);
     voiceUrl = supabase.storage.from('evidence_photos').getPublicUrl(fileName).data.publicUrl;
@@ -48,11 +63,26 @@ export async function submitReport({
       longitude: longitude,
       range: range,
       image_url: imageUrl,
-      voice_url: voiceUrl, // New
+      voice_url: voiceUrl,
       report_type: reportType,
       is_clear: isClear,
       damage_desc: damageDesc,
-      casualties: casualties
+      casualties: casualties,
+      // Mapping Detailed Fields
+      officer_name: officerName,
+      designation: designation,
+      team_members: teamMembers,
+      bull_count: bullCount,
+      makhna_count: makhnaCount,
+      male_group_count: maleGroupCount,
+      female_group_count: femaleGroupCount,
+      female_calf_count: femaleCalfCount,
+      single_female_count: singleFemaleCount,
+      is_damage_caused: isDamageCaused,
+      damage_type: damageType,
+      chase_start_time: chaseStartTime || null,
+      chase_result: chaseResult,
+      remarks: remarks
     })
     .select()
     .single();

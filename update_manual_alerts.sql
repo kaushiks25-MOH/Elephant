@@ -1,7 +1,24 @@
 -- 1. Add range column to reports table if it doesn't exist
 ALTER TABLE public.reports ADD COLUMN IF NOT EXISTS range TEXT;
 
--- 2. Update OneSignal Notification Function to support MANUAL alerts
+-- 2. Add Detailed Reporting Fields
+ALTER TABLE public.reports 
+ADD COLUMN IF NOT EXISTS officer_name TEXT,
+ADD COLUMN IF NOT EXISTS designation TEXT,
+ADD COLUMN IF NOT EXISTS team_members TEXT,
+ADD COLUMN IF NOT EXISTS bull_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS makhna_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS male_group_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS female_group_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS female_calf_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS single_female_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS is_damage_caused BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS damage_type TEXT,
+ADD COLUMN IF NOT EXISTS chase_start_time TIME,
+ADD COLUMN IF NOT EXISTS chase_result TEXT,
+ADD COLUMN IF NOT EXISTS remarks TEXT;
+
+-- 3. Update OneSignal Notification Function to support MANUAL alerts
 CREATE OR REPLACE FUNCTION public.send_onesignal_notification()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -48,6 +65,26 @@ BEGIN
         'latitude', NEW.latitude,
         'longitude', NEW.longitude,
         'report_type', NEW.report_type
+      )
+    )
+  );
+
+  -- 4. Send request to WhatsApp Webhook (Placeholder)
+  -- Replace 'YOUR_WEBHOOK_URL' with a service like Zapier or Make.com
+  PERFORM net.http_post(
+    url := 'https://hook.us1.make.com/placeholder-whatsapp-webhook',
+    headers := jsonb_build_object('Content-Type', 'application/json'),
+    body := jsonb_build_object(
+      'message', notification_title || ': ' || notification_body,
+      'group_link', 'https://chat.whatsapp.com/ETSAf9K9oUn1bPoY34L74Z',
+      'details', jsonb_build_object(
+        'officer', NEW.officer_name,
+        'location', NEW.latitude || ',' || NEW.longitude,
+        'counts', jsonb_build_object(
+          'bull', NEW.bull_count,
+          'makhna', NEW.makhna_count,
+          'herd', NEW.male_group_count + NEW.female_group_count
+        )
       )
     )
   );
