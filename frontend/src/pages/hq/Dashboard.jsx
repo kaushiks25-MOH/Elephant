@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck, Home } from 'lucide-react';
+import { Bell, FileText, AlertTriangle, Map as MapIcon, RefreshCw, MapPin, Menu, X, Mic, ShieldCheck, Home, BarChart3, Users } from 'lucide-react';
 import { fetchReports, fetchAnalytics, fetchActiveAlerts } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -111,6 +111,9 @@ export default function HqDashboard() {
       <div className="h-px bg-white/5 mx-6 my-2"></div>
       <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/dashboard' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
         <MapIcon size={20} className={useLocation().pathname === '/dashboard' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">Live Dashboard</span>
+      </Link>
+      <Link to="/analytics" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/analytics' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
+        <BarChart3 size={20} className={useLocation().pathname === '/analytics' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">Analytics</span>
       </Link>
       <Link to="/reports" onClick={() => setIsMobileMenuOpen(false)} className={`flex items-center gap-3 px-6 py-4 ${useLocation().pathname === '/reports' ? 'bg-[var(--color-elephant-amber)]/20 border-r-4 border-[var(--color-elephant-gold)] text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'} transition-colors whitespace-nowrap md:rounded-none`}>
         <FileText size={20} className={useLocation().pathname === '/reports' ? "text-[var(--color-elephant-gold)]" : ""} /> <span className="font-medium text-sm">All Reports</span>
@@ -297,6 +300,85 @@ export default function HqDashboard() {
                     </motion.div>
                   ))
                 )}
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Range Status */}
+            <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden">
+              <div className="p-5 border-b border-white/5 bg-white/5">
+                <h3 className="font-bold text-white flex items-center gap-2 text-sm uppercase tracking-widest">
+                  <RefreshCw size={18} className="text-blue-400"/> Range Status Today
+                </h3>
+              </div>
+              <div className="p-6">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="text-white/30 uppercase tracking-widest border-b border-white/5">
+                      <th className="pb-3 px-2">Range</th>
+                      <th className="pb-3 px-2">Status</th>
+                      <th className="pb-3 px-2">Out</th>
+                      <th className="pb-3 px-2 text-right">Last Sync</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {[
+                      {r: 'Coimbatore', s: 'Alert', c: 18, t: '14:30', cl: 'bg-red-500'},
+                      {r: 'Mettupalayam', s: 'Alert', c: 12, t: '14:32', cl: 'bg-red-500'},
+                      {r: 'Sirumugai', s: 'Active', c: 7, t: '08:40', cl: 'bg-orange-500'},
+                      {r: 'Periyanaickenpalayam', s: 'Active', c: 5, t: '07:15', cl: 'bg-orange-500'},
+                      {r: 'Karamadai', s: 'Clear', c: 5, t: '06:20', cl: 'bg-green-500'},
+                      {r: 'Madukkarai', s: 'Clear', c: 0, t: '04:00', cl: 'bg-green-500'}
+                    ].map((row, i) => (
+                      <tr key={i} className="hover:bg-white/5 transition-colors group">
+                        <td className="py-4 px-2 font-bold text-white">{row.r}</td>
+                        <td className="py-4 px-2">
+                          <span className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${row.cl} animate-pulse`}></span>
+                            {row.s}
+                          </span>
+                        </td>
+                        <td className="py-4 px-2 font-black text-[var(--color-elephant-gold)]">{row.c}</td>
+                        <td className="py-4 px-2 text-right text-white/40">{row.t}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Staff Status Grid */}
+            <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden">
+              <div className="p-5 border-b border-white/5 bg-white/5">
+                <h3 className="font-bold text-white flex items-center gap-2 text-sm uppercase tracking-widest">
+                  <Users size={18} className="text-green-400"/> Staff Force Deployment
+                </h3>
+              </div>
+              <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  {n: 'RFO Murugan', r: 'Mettupalayam', s: 'Field', p: 'MR'},
+                  {n: 'Karthik P', r: 'Coimbatore', s: 'Field', p: 'KP'},
+                  {n: 'Selvam V', r: 'Sirumugai', s: 'Field', p: 'SV'},
+                  {n: 'Anbu R', r: 'Karamadai', s: 'Field', p: 'AR'},
+                  {n: 'Vel Kumar', r: 'HQ Command', s: 'Command', p: 'VK'},
+                  {n: 'Ponraj S', r: 'Control Room', s: 'Command', p: 'PS'}
+                ].map((s, i) => (
+                  <div key={i} className="bg-white/5 border border-white/5 p-3 rounded-2xl flex items-center gap-4 hover:border-[var(--color-elephant-gold)]/30 transition-all cursor-default">
+                    <div className="w-10 h-10 rounded-full bg-[var(--color-elephant-amber)]/20 border border-[var(--color-elephant-gold)]/40 flex items-center justify-center text-[var(--color-elephant-gold)] font-bold text-xs">{s.p}</div>
+                    <div className="flex-1">
+                      <p className="text-xs font-bold text-white">{s.n}</p>
+                      <p className="text-[9px] text-white/40 uppercase tracking-tighter">{s.r}</p>
+                    </div>
+                    <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase ${s.s === 'Field' ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
+                      {s.s}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 mx-6 p-4 bg-white/5 rounded-2xl border border-white/5 text-[10px] text-white/50 mb-6 flex justify-between items-center">
+                <span><strong className="text-green-500">18/24</strong> Deployed</span>
+                <span><strong className="text-orange-500">4</strong> Standby</span>
+                <span><strong className="text-white/20">2</strong> Off Duty</span>
               </div>
             </div>
           </div>

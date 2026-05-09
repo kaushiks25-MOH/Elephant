@@ -5,6 +5,7 @@ import { lazy, Suspense } from 'react';
 const ReportForm  = lazy(() => import('./pages/field/ReportForm'));
 const HqDashboard = lazy(() => import('./pages/hq/Dashboard'));
 const HqReports   = lazy(() => import('./pages/hq/Reports'));
+const HqAnalytics = lazy(() => import('./pages/hq/Analytics'));
 const Landing     = lazy(() => import('./pages/Landing'));
 
 const PageLoader = () => (
@@ -38,6 +39,9 @@ function App() {
           
           {/* Optional: Full Reports View (Public) */}
           <Route path="/reports" element={<HqReports />} />
+          
+          {/* Analytics View (Public) */}
+          <Route path="/analytics" element={<HqAnalytics />} />
 
           {/* Catch all back to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
