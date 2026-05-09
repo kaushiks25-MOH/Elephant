@@ -229,7 +229,7 @@ export default function Landing() {
   }, [scriptsReady]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-elephant-ivory)] font-[family-name:var(--font-dm)] text-[var(--color-elephant-coffee)] overflow-x-hidden">
+    <div className="min-h-screen bg-[var(--color-elephant-coffee)] font-[family-name:var(--font-dm)] text-white/90 overflow-x-hidden">
       {/* Top Banner */}
       <div className="hidden md:flex bg-[var(--color-elephant-forest)] text-white/80 text-[10px] py-2.5 px-10 justify-between items-center font-medium tracking-wide">
         <span>🌿 Tamil Nadu Innovation Initiatives (TANII) 2023–24 · Under Dept. of Environment, Climate Change and Forests</span>
@@ -299,40 +299,41 @@ export default function Landing() {
       </div>
 
       {/* About */}
-      <section id="about" className="py-24">
-        <div className="container mx-auto px-6">
+      <section id="about" className="py-32 bg-[var(--color-elephant-coffee)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--color-elephant-moss)]/10 rounded-full blur-[120px] -mr-64 -mt-64"></div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="relative group">
-              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl relative">
-                <img src="/assets/about.png" className="w-full h-full object-cover" alt="Elephant Conservation" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)]/50 to-transparent"></div>
+              <div className="aspect-[4/3] rounded-[40px] overflow-hidden shadow-2xl relative border border-white/10">
+                <img src="https://images.unsplash.com/photo-1534067783941-51c9c23ecefd?w=800&q=80" className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-1000" alt="Elephant Conservation" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)]/80 to-transparent"></div>
               </div>
-              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-2xl border border-[var(--color-elephant-border)] max-w-[200px]">
-                <div className="font-[family-name:var(--font-playfair)] text-4xl font-bold text-[var(--color-elephant-coffee)]">1st</div>
-                <div className="text-xs text-[var(--color-elephant-muted)] font-bold uppercase tracking-wider mt-1">Elephant Cell in Tamil Nadu</div>
+              <div className="absolute -bottom-6 -right-6 bg-[var(--color-elephant-gold)] p-8 rounded-[30px] shadow-2xl z-20 max-w-[220px]">
+                <div className="font-[family-name:var(--font-playfair)] text-5xl font-black text-[var(--color-elephant-coffee)]">1st</div>
+                <div className="text-[10px] text-[var(--color-elephant-coffee)]/70 font-black uppercase tracking-wider mt-1 leading-tight">Elephant Cell in Tamil Nadu</div>
               </div>
             </div>
             <div className="space-y-8">
-              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">About AECRCMC</div>
-              <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-bold leading-tight">Pioneering Elephant Conservation in Coimbatore</h2>
-              <div className="w-12 h-1 bg-[var(--color-elephant-amber)]"></div>
-              <p className="text-lg text-[var(--color-elephant-muted)] font-medium leading-relaxed">
+              <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Institutional Context</div>
+              <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white leading-tight">Pioneering Elephant Conservation <span className="text-[var(--color-elephant-gold)] italic">in Coimbatore</span></h2>
+              <div className="w-16 h-1 bg-[var(--color-elephant-gold)]"></div>
+              <p className="text-lg text-white/60 font-medium leading-relaxed">
                 The AECRCMC was established under TANII 2023–24 to address the escalating human-elephant conflict through scientific research, technology, and community engagement.
               </p>
-              <p className="text-sm text-[var(--color-elephant-muted)]/80 leading-relaxed">
+              <p className="text-sm text-white/40 leading-relaxed max-w-xl">
                 Coimbatore Forest Division serves as the mid-zone connecting Eastern and Western Ghats, making it a critical conflict zone and data hub. Our centre integrates GIS mapping, AI surveillance, and field research to provide landscape-level solutions.
               </p>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 gap-6">
                 {[
                   { i: <Shield size={20}/>, t: "TANII Funded", d: "Sanctioned under Tamil Nadu Innovation Initiatives." },
                   { i: <Zap size={20}/>, t: "AI Surveillance", d: "24/7 track monitoring with AI detection." },
                   { i: <Globe size={20}/>, t: "GIS Mapping", d: "Spatial corridor assessment across 7 divisions." },
                   { i: <Users size={20}/>, t: "Community Led", d: "120+ active volunteers from colleges." }
                 ].map((f, i) => (
-                  <div key={i} className="p-5 bg-[var(--color-elephant-cream)] rounded-2xl border border-[var(--color-elephant-border)] hover:border-[var(--color-elephant-amber)]/50 transition-all">
-                    <div className="text-[var(--color-elephant-amber)] mb-3">{f.i}</div>
-                    <h4 className="font-bold text-sm mb-1">{f.t}</h4>
-                    <p className="text-[11px] text-[var(--color-elephant-muted)]">{f.d}</p>
+                  <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/10 hover:border-[var(--color-elephant-gold)]/40 hover:bg-white/[0.08] transition-all group">
+                    <div className="text-[var(--color-elephant-gold)] mb-4 group-hover:scale-110 transition-transform">{f.i}</div>
+                    <h4 className="font-bold text-sm text-white mb-1 uppercase tracking-widest">{f.t}</h4>
+                    <p className="text-[11px] text-white/40 leading-relaxed">{f.d}</p>
                   </div>
                 ))}
               </div>
@@ -342,27 +343,28 @@ export default function Landing() {
       </section>
 
       {/* Project Details */}
-      <section id="project" className="py-24 bg-[var(--color-elephant-cream)]">
-        <div className="container mx-auto px-6 text-center">
-          <div className="max-w-2xl mx-auto mb-16 space-y-4">
-            <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">TANII Project Details</div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold">Project at a Glance</h2>
-            <p className="text-[var(--color-elephant-muted)] font-medium">Administrative sanction issued vide G.O.(Ms) No. 42, dated 22nd February 2024 by the Planning & Special Initiatives Dept.</p>
+      <section id="project" className="py-32 bg-black/20 border-y border-white/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(193,127,58,0.05)_0%,transparent_70%)]"></div>
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <div className="max-w-2xl mx-auto mb-20 space-y-4">
+            <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Project Framework</div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white">Project at a Glance</h2>
+            <p className="text-white/40 text-sm font-medium">Administrative sanction issued vide G.O.(Ms) No. 42, dated 22nd February 2024 by the Planning & Special Initiatives Dept.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
             {[
-              { i: "💰", t: "Total Sanctioned Cost", v: "₹1,87,08,000", d: "One Crore Eighty-Seven Lakh Only" },
-              { i: "📅", t: "Project Duration", v: "3 Years", d: "Launched under TANII 2023–24" },
-              { i: "🌍", t: "Study Area", v: "7 Divisions", d: "Coimbatore, Salem, Hosur, Dharmapuri..." },
-              { i: "🎯", t: "Focus Areas", v: "5 Pillars", d: "Research · Mitigation · AI · Capacity · Community" },
-              { i: "🏆", t: "Key Achievement", v: "TN's 1st", d: "Dedicated Elephant Cell with AI Command Centre" }
+              { i: "💰", t: "Sanctioned Cost", v: "₹1.87 Cr", d: "One Crore Eighty-Seven Lakh" },
+              { i: "📅", t: "Project Period", v: "3 Years", d: "Launched under TANII 2023–24" },
+              { i: "🌍", t: "Geographic Scope", v: "7 Div.", d: "Coimbatore to Salem Corridor" },
+              { i: "🎯", t: "Strategic Pillars", v: "5 Core", d: "Research · AI · GIS · Community" },
+              { i: "🏆", t: "Unique Identity", v: "TN's 1st", d: "Dedicated Elephant Cell Unit" }
             ].map((card, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl border border-[var(--color-elephant-border)] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all text-left relative overflow-hidden group">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-elephant-amber)] to-[var(--color-elephant-gold)]"></div>
-                <div className="text-4xl mb-6">{card.i}</div>
-                <div className="text-[10px] font-black uppercase text-[var(--color-elephant-muted)] tracking-wider mb-2">{card.t}</div>
-                <div className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-[var(--color-elephant-coffee)] mb-2 group-hover:text-[var(--color-elephant-amber)] transition-colors">{card.v}</div>
-                <p className="text-xs text-[var(--color-elephant-muted)] font-medium leading-relaxed">{card.d}</p>
+              <div key={i} className="bg-white/5 p-8 rounded-[40px] border border-white/10 shadow-xl hover:border-[var(--color-elephant-gold)]/40 hover:-translate-y-2 transition-all text-left relative group overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-[var(--color-elephant-gold)] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                <div className="text-4xl mb-6 grayscale group-hover:grayscale-0 transition-all">{card.i}</div>
+                <div className="text-[9px] font-black uppercase text-white/30 tracking-widest mb-2">{card.t}</div>
+                <div className="font-[family-name:var(--font-playfair)] text-3xl font-black text-white mb-2 group-hover:text-[var(--color-elephant-gold)] transition-colors">{card.v}</div>
+                <p className="text-[10px] text-white/40 font-bold uppercase tracking-tighter leading-relaxed">{card.d}</p>
               </div>
             ))}
           </div>
@@ -370,13 +372,13 @@ export default function Landing() {
       </section>
 
       {/* Objectives */}
-      <section id="objectives" className="py-24">
+      <section id="objectives" className="py-32 bg-[var(--color-elephant-coffee)]">
         <div className="container mx-auto px-6">
-          <div className="mb-16">
-            <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">Why We Exist</div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold mt-2">Project Objectives</h2>
-            <div className="w-12 h-1 bg-[var(--color-elephant-amber)] mt-6"></div>
-            <p className="text-lg text-[var(--color-elephant-muted)] mt-8 max-w-2xl font-medium">A multi-dimensional approach combining science, technology, and community action to achieve sustainable human-elephant coexistence.</p>
+          <div className="mb-20">
+            <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Strategic Compass</div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white mt-4">Project Objectives</h2>
+            <div className="w-16 h-1 bg-[var(--color-elephant-gold)] mt-8"></div>
+            <p className="text-lg text-white/60 mt-8 max-w-2xl font-medium leading-relaxed">A multi-dimensional approach combining science, technology, and community action to achieve sustainable human-elephant coexistence.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -389,13 +391,13 @@ export default function Landing() {
               { i: <Globe size={22}/>, t: "Corridor Conservation", d: "Identification and restoration of critical migration corridors." },
               { i: <Milestone size={22}/>, t: "Conflict Mitigation", d: "Evidence-based solutions like eco-barriers and light deterrents." }
             ].map((obj, i) => (
-              <div key={i} className="flex gap-5 bg-white p-6 rounded-2xl border border-[var(--color-elephant-border)] hover:border-[var(--color-elephant-amber)] hover:shadow-lg transition-all group">
-                <div className="w-12 h-12 bg-[var(--color-elephant-mist)] rounded-xl flex items-center justify-center text-[var(--color-elephant-amber)] group-hover:bg-[var(--color-elephant-amber)] group-hover:text-white transition-all flex-shrink-0">
+              <div key={i} className="flex gap-5 bg-white/5 p-8 rounded-3xl border border-white/10 hover:border-[var(--color-elephant-gold)]/40 hover:bg-white/[0.08] transition-all group">
+                <div className="w-14 h-14 bg-[var(--color-elephant-gold)]/10 rounded-2xl flex items-center justify-center text-[var(--color-elephant-gold)] group-hover:bg-[var(--color-elephant-gold)] group-hover:text-[var(--color-elephant-coffee)] transition-all flex-shrink-0">
                   {obj.i}
                 </div>
-                <div className="space-y-2">
-                  <h4 className="font-bold text-sm text-[var(--color-elephant-coffee)]">{obj.t}</h4>
-                  <p className="text-[11px] text-[var(--color-elephant-muted)] leading-relaxed">{obj.d}</p>
+                <div className="space-y-3">
+                  <h4 className="font-black text-xs uppercase tracking-widest text-white group-hover:text-[var(--color-elephant-gold)] transition-colors">{obj.t}</h4>
+                  <p className="text-[11px] text-white/40 leading-relaxed font-medium">{obj.d}</p>
                 </div>
               </div>
             ))}
@@ -404,35 +406,73 @@ export default function Landing() {
       </section>
 
       {/* Activities */}
-      <section id="activities" className="py-24 bg-[var(--color-elephant-coffee)] text-white">
+      <section id="activities" className="py-32 bg-[var(--color-elephant-coffee)] text-white">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-20 space-y-4">
-            <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-gold)]">2024–2025 Milestones</div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold">Key Activities & Achievements</h2>
-            <div className="w-12 h-1 bg-[var(--color-elephant-amber)] mx-auto"></div>
-            <p className="text-[var(--color-elephant-text)]/60 max-w-xl mx-auto font-medium">A comprehensive first year that established Tamil Nadu's first Elephant Cell and drove major inter-state collaboration.</p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-20">
+            <div className="max-w-2xl">
+              <div className="text-[var(--color-elephant-gold)] font-black text-xs uppercase tracking-[0.3em] mb-4">Field Intelligence</div>
+              <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white leading-tight">
+                2025 Analytics <span className="text-[var(--color-elephant-gold)] italic">& Metrics</span>
+              </h2>
+            </div>
+            <div className="pb-2">
+              <Link to="/analytics" className="text-white/60 hover:text-[var(--color-elephant-gold)] font-bold text-sm flex items-center gap-2 border-b border-white/10 pb-1 uppercase tracking-widest">
+                Full Report Center →
+              </Link>
+            </div>
           </div>
-          
+
           <div className="grid lg:grid-cols-3 gap-8">
-            {[
-              { n: "01", t: "Capacity Building", l: ["BNPT Training (75 members)", "ACF AI Training (Feb 21, 2025)", "SFS Refresher Course", "Madhya Pradesh Forest Tour"] },
-              { n: "02", t: "Awareness Programs", l: ["World Elephant Day Rally", "Farmers' Grievance Day (70+ pets)", "CRPF Awareness Program", "Eco Club World Wildlife Day"] },
-              { n: "03", t: "Research & Monitoring", l: ["TN's 1st Elephant Cell", "24/7 AI Railway Surveillance", "National Hackathon 2025", "NGO Coordination Meetings"] }
-            ].map((comp, i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-3xl p-10 hover:border-[var(--color-elephant-gold)]/30 transition-all group relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-elephant-amber)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="font-[family-name:var(--font-playfair)] text-6xl font-bold text-white/5 mb-6 leading-none">{comp.n}</div>
-                <h3 className="text-xl font-bold mb-6">{comp.t}</h3>
-                <ul className="space-y-4">
-                  {comp.l.map((item, j) => (
-                    <li key={j} className="text-sm text-white/50 flex items-start gap-3 pb-3 border-b border-white/5 last:border-0">
-                      <span className="text-[var(--color-elephant-amber)] mt-1">→</span> {item}
-                    </li>
-                  ))}
-                </ul>
+            <div className="bg-white/5 p-10 rounded-[40px] border border-white/10 shadow-2xl flex flex-col h-[500px]">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="font-bold text-white uppercase text-xs tracking-[0.2em]">Sighting Distribution</h3>
+                <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-500"><Users size={18}/></div>
               </div>
-            ))}
+              <div className="flex-1 relative">
+                <canvas ref={donutRef}></canvas>
+              </div>
+              <div className="mt-8 grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-white/5 rounded-2xl border border-white/5">
+                  <div className="text-[var(--color-elephant-gold)] font-bold text-lg">75%</div>
+                  <div className="text-[9px] text-white/40 uppercase font-black">Lone Males</div>
+                </div>
+                <div className="text-center p-4 bg-white/5 rounded-2xl border border-white/5">
+                  <div className="text-white font-bold text-lg">24.1%</div>
+                  <div className="text-[9px] text-white/40 uppercase font-black">Females+Calf</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/5 p-10 rounded-[40px] border border-white/10 shadow-2xl flex flex-col h-[500px]">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="font-bold text-white uppercase text-xs tracking-[0.2em]">Incident Trend</h3>
+                <div className="w-8 h-8 rounded-lg bg-[var(--color-elephant-gold)]/10 flex items-center justify-center text-[var(--color-elephant-gold)]"><BarChart size={18}/></div>
+              </div>
+              <div className="flex-1 relative">
+                <canvas ref={barRef}></canvas>
+              </div>
+              <p className="mt-8 text-white/40 text-[10px] uppercase font-bold text-center tracking-widest">Seasonal Pattern: Jan–Aug 2025</p>
+            </div>
+
+            <div className="bg-white/5 p-10 rounded-[40px] border border-white/10 shadow-2xl flex flex-col h-[500px]">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="font-bold text-white uppercase text-xs tracking-[0.2em]">Range Comparison</h3>
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500"><Globe size={18}/></div>
+              </div>
+              <div className="flex-1 relative">
+                <canvas ref={radarRef}></canvas>
+              </div>
+              <div className="mt-8 flex justify-between items-center p-4 bg-white/5 rounded-2xl border border-white/5">
+                <div className="flex items-center gap-3">
+                   <div className="w-3 h-3 rounded-full bg-[var(--color-elephant-gold)]"></div>
+                   <span className="text-xs text-white/60 font-bold uppercase tracking-widest">Coimbatore Div.</span>
+                </div>
+                <span className="text-white font-black text-sm">644 Pts</span>
+              </div>
+            </div>
           </div>
+        </div>
+      </section>
 
           {/* Hackathon Highlight */}
           <div className="mt-20 bg-gradient-to-br from-[var(--color-elephant-forest)] to-[var(--color-elephant-coffee)] rounded-[40px] p-12 grid lg:grid-cols-2 gap-16 items-center relative overflow-hidden shadow-2xl border border-white/10">
@@ -463,75 +503,68 @@ export default function Landing() {
       </section>
 
       {/* Dashboard */}
-      <section id="dashboard" className="py-24">
+      <section id="dashboard" className="py-32 bg-[var(--color-elephant-coffee)]">
         <div className="container mx-auto px-6">
-          <div className="mb-16">
-            <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">Live Data · Jan–Aug 2025</div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold mt-2">Conflict Monitoring Dashboard</h2>
-            <div className="w-12 h-1 bg-[var(--color-elephant-amber)] mt-6"></div>
-            <p className="text-lg text-[var(--color-elephant-muted)] mt-8 max-w-2xl font-medium">Real-time field data from AECRCMC teams across 7 forest ranges in Coimbatore Division.</p>
+          <div className="mb-20">
+            <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Live Intelligence</div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white mt-4">Conflict Monitoring <span className="text-[var(--color-elephant-gold)] italic">HQ</span></h2>
+            <div className="w-16 h-1 bg-[var(--color-elephant-gold)] mt-8"></div>
+            <p className="text-lg text-white/60 mt-8 max-w-2xl font-medium leading-relaxed">Real-time field data from AECRCMC teams across 7 forest ranges in Coimbatore Division.</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
             {[
-              { l: "Total Incidents", v: "2633", s: "Jan–Aug 2025", c: "border-red-500" },
-              { l: "Lone Male", v: "1978", s: "Most common type", c: "border-[var(--color-elephant-amber)]" },
-              { l: "Female Group", v: "1219", s: "Sightings recorded", c: "border-green-500" },
-              { l: "Female + Calf", v: "637", s: "Vulnerable groups", c: "border-blue-500" },
-              { l: "Male Group", v: "1035", s: "Group encounters", c: "border-yellow-500" }
+              { l: "Total Incidents", v: "2633", s: "Jan–Aug 2025", c: "bg-red-500/10 border-red-500/40" },
+              { l: "Lone Male", v: "1978", s: "Most common", c: "bg-[var(--color-elephant-gold)]/10 border-[var(--color-elephant-gold)]/40" },
+              { l: "Female Group", v: "1219", s: "Active herds", c: "bg-green-500/10 border-green-500/40" },
+              { l: "Female + Calf", v: "637", s: "Vulnerable", c: "bg-blue-500/10 border-blue-500/40" },
+              { l: "Male Group", v: "1035", s: "Bachelor groups", c: "bg-yellow-500/10 border-yellow-500/40" }
             ].map((kpi, i) => (
-              <div key={i} className={`bg-white p-6 rounded-2xl border border-[var(--color-elephant-border)] border-b-4 ${kpi.c} shadow-sm group`}>
-                <div className="text-[10px] font-black uppercase text-[var(--color-elephant-muted)] tracking-wider mb-2">{kpi.l}</div>
-                <div className="font-[family-name:var(--font-playfair)] text-4xl font-bold text-[var(--color-elephant-coffee)] mb-1 group-hover:scale-105 transition-transform origin-left">{kpi.v}</div>
-                <div className="text-[10px] text-[var(--color-elephant-muted)] font-medium uppercase tracking-tighter opacity-60">{kpi.s}</div>
+              <div key={i} className={`p-8 rounded-3xl border ${kpi.c} shadow-xl group hover:-translate-y-1 transition-all backdrop-blur-md`}>
+                <div className="text-[10px] font-black uppercase text-white/30 tracking-widest mb-3">{kpi.l}</div>
+                <div className="font-[family-name:var(--font-playfair)] text-4xl font-black text-white mb-2 group-hover:scale-105 transition-transform origin-left">{kpi.v}</div>
+                <div className="text-[9px] text-white/40 font-black uppercase tracking-tighter opacity-60">{kpi.s}</div>
               </div>
             ))}
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-6 mb-6">
-            <div className="lg:col-span-2 bg-white p-8 rounded-3xl border border-[var(--color-elephant-border)] shadow-sm">
-              <h3 className="font-bold text-base mb-2">Incidents by Range</h3>
-              <p className="text-xs text-[var(--color-elephant-muted)] mb-8">Jan–Aug 2025 • Total 2,633 incidents across 7 ranges</p>
-              <div className="space-y-5">
+          <div className="grid lg:grid-cols-3 gap-8 mb-8">
+            <div className="lg:col-span-2 bg-white/5 p-10 rounded-[40px] border border-white/10 shadow-2xl">
+              <div className="flex items-center justify-between mb-10">
+                <div>
+                  <h3 className="font-bold text-white uppercase text-xs tracking-widest">Incidents by Range</h3>
+                  <p className="text-[10px] text-white/40 mt-1 uppercase font-black">Jan–Aug 2025 • Impact Analysis</p>
+                </div>
+                <div className="px-4 py-1.5 bg-white/5 rounded-full border border-white/10 text-[10px] font-black text-white/50 uppercase tracking-widest">Live Sync</div>
+              </div>
+              <div className="space-y-6">
                 {rangeData.map((d, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                  <div key={i} className="space-y-2 group">
+                    <div className="flex justify-between text-[11px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">
                       <span>{d.name}</span>
-                      <span className="text-[var(--color-elephant-muted)]">{d.val}</span>
+                      <span className="text-[var(--color-elephant-gold)]">{d.val}</span>
                     </div>
-                    <div className="h-5 bg-[var(--color-elephant-cream)] rounded-full border border-[var(--color-elephant-border)] overflow-hidden">
-                      <div 
-                        className="h-full rounded-full transition-all duration-1000 flex items-center justify-end px-3 text-[10px] font-black text-white" 
-                        style={{ width: `${(d.val/644)*100}%`, backgroundColor: d.color }}
-                      >
-                      </div>
+                    <div className="h-4 bg-white/5 rounded-full border border-white/5 overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${(d.val/644)*100}%` }}
+                        viewport={{ once: true }}
+                        className="h-full rounded-full transition-all duration-1000 flex items-center justify-end px-3" 
+                        style={{ backgroundColor: d.color }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="bg-white p-8 rounded-3xl border border-[var(--color-elephant-border)] shadow-sm flex flex-col">
-              <h3 className="font-bold text-base mb-2">Elephant Type Distribution</h3>
-              <p className="text-xs text-[var(--color-elephant-muted)] mb-8">Breakdown of observed group types</p>
-              <div className="flex-1 min-h-[250px] relative">
+            <div className="bg-white/5 p-10 rounded-[40px] border border-white/10 shadow-2xl flex flex-col h-[600px]">
+              <h3 className="font-bold text-white uppercase text-xs tracking-widest mb-10">Classification Breakdown</h3>
+              <div className="flex-1 relative">
                 <canvas ref={donutRef}></canvas>
               </div>
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6">
-            <div className="bg-white p-8 rounded-3xl border border-[var(--color-elephant-border)] shadow-sm h-[350px] flex flex-col">
-              <h3 className="font-bold text-base mb-2">Monthly Incident Trend</h3>
-              <p className="text-xs text-[var(--color-elephant-muted)] mb-6">2025 — January through August peak analysis</p>
-              <div className="flex-1 relative">
-                <canvas ref={barRef}></canvas>
-              </div>
-            </div>
-            <div className="bg-white p-8 rounded-3xl border border-[var(--color-elephant-border)] shadow-sm h-[350px] flex flex-col">
-              <h3 className="font-bold text-base mb-2">Range-wise Breakdown</h3>
-              <p className="text-xs text-[var(--color-elephant-muted)] mb-6">Relative conflict intensity by patrol range</p>
-              <div className="flex-1 relative">
-                <canvas ref={radarRef}></canvas>
+              <div className="mt-10 p-5 bg-white/5 rounded-3xl border border-white/5 text-center">
+                 <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mb-1">Primary Threat Vector</p>
+                 <p className="text-sm font-bold text-white italic">"Lone Male Dispersal"</p>
               </div>
             </div>
           </div>
@@ -539,20 +572,29 @@ export default function Landing() {
       </section>
 
       {/* GIS Map */}
-      <section id="gismap" className="py-24 bg-[var(--color-elephant-cream)]">
+      <section id="gismap" className="py-32 bg-[var(--color-elephant-coffee)]">
         <div className="container mx-auto px-6">
-          <div className="mb-12">
-            <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">GIS & Spatial Analysis</div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold mt-2">Conflict Hotspot Map</h2>
-            <div className="w-12 h-1 bg-[var(--color-elephant-amber)] mt-6"></div>
-            <p className="text-lg text-[var(--color-elephant-muted)] mt-8 max-w-2xl font-medium">Real GPS-tracked elephant straying incidents across Coimbatore Forest Division, Jan–Aug 2025. Colour-coded by patrol range.</p>
+          <div className="mb-16">
+            <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Spatial Intelligence</div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white mt-4">Conflict Hotspot <span className="text-[var(--color-elephant-gold)] italic">Heatmap</span></h2>
+            <div className="w-16 h-1 bg-[var(--color-elephant-gold)] mt-8"></div>
+            <p className="text-lg text-white/60 mt-8 max-w-2xl font-medium leading-relaxed">Real GPS-tracked elephant straying incidents across Coimbatore Forest Division, Jan–Aug 2025. Data visualized by patrol range.</p>
           </div>
-          <div ref={mapRef} className="h-[500px] rounded-[40px] border border-[var(--color-elephant-border)] shadow-2xl overflow-hidden z-0"></div>
-          <div className="flex flex-wrap gap-6 mt-10 p-8 bg-white rounded-3xl border border-[var(--color-elephant-border)] shadow-sm">
+          <div className="rounded-[50px] overflow-hidden h-[600px] shadow-2xl border border-white/10 relative group bg-black/20">
+            <div ref={mapRef} className="w-full h-full z-0 opacity-80 group-hover:opacity-100 transition-opacity duration-1000"></div>
+            <div className="absolute top-8 right-8 z-20 bg-[var(--color-elephant-coffee)]/90 backdrop-blur-xl p-8 rounded-3xl border border-white/10 text-white shadow-2xl max-w-xs pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+               <div className="flex items-center gap-3 mb-6">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+                  <h4 className="font-black text-[10px] uppercase tracking-[0.2em] text-[var(--color-elephant-gold)]">Live Telemetry Feed</h4>
+               </div>
+               <p className="text-[10px] text-white/40 leading-relaxed font-bold uppercase tracking-widest">Processing 2,633 incident nodes across 7 forest ranges.</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-4 mt-12 p-10 bg-white/5 rounded-[30px] border border-white/10 shadow-2xl backdrop-blur-md">
             {rangeData.map((d, i) => (
-              <div key={i} className="flex items-center gap-3 text-xs font-bold text-[var(--color-elephant-coffee)] uppercase tracking-tight">
-                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: d.color }}></div>
-                {d.name} ({d.val})
+              <div key={i} className="flex items-center gap-3 text-[9px] font-black text-white/60 uppercase tracking-[0.15em] hover:text-white transition-colors cursor-default">
+                <div className="w-2.5 h-2.5 rounded-full shrink-0 shadow-lg" style={{ backgroundColor: d.color }}></div>
+                {d.name} <span className="text-[var(--color-elephant-gold)] opacity-40">[{d.val}]</span>
               </div>
             ))}
           </div>
@@ -560,14 +602,14 @@ export default function Landing() {
       </section>
 
       {/* Friends of Elephants */}
-      <section id="friends" className="py-24">
+      <section id="friends" className="py-32 bg-black/20 border-y border-white/5 relative overflow-hidden">
         <div className="container mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8">
-              <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">Community Initiative</div>
-              <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-bold leading-tight">Friends of Elephants</h2>
-              <div className="w-12 h-1 bg-[var(--color-elephant-amber)]"></div>
-              <p className="text-lg text-[var(--color-elephant-muted)] font-medium">Join our growing volunteer network dedicated to elephant conservation and human-wildlife coexistence.</p>
+          <div className="grid lg:grid-cols-2 gap-24 items-center">
+            <div className="space-y-10">
+              <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Community Pulse</div>
+              <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white leading-tight">Friends of <span className="text-[var(--color-elephant-gold)] italic">Elephants</span></h2>
+              <div className="w-16 h-1 bg-[var(--color-elephant-gold)]"></div>
+              <p className="text-lg text-white/50 font-medium leading-relaxed">Join our growing volunteer network dedicated to elephant conservation and human-wildlife coexistence.</p>
               <ul className="space-y-4">
                 {[
                   { i: "🐘", t: "Census operations and population monitoring drives" },
@@ -576,43 +618,47 @@ export default function Landing() {
                   { i: "📚", t: "HEC awareness programs in schools and colleges" },
                   { i: "📸", t: "Wildlife photography and citizen science" }
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-4 py-4 border-b border-[var(--color-elephant-border)] last:border-0 group">
-                    <div className="w-10 h-10 bg-[var(--color-elephant-mist)] rounded-xl flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">{item.i}</div>
-                    <span className="text-sm font-medium text-[var(--color-elephant-coffee)]">{item.t}</span>
+                  <li key={i} className="flex items-center gap-5 py-5 border-b border-white/5 last:border-0 group">
+                    <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform border border-white/5">{item.i}</div>
+                    <span className="text-sm font-bold text-white/60 group-hover:text-white transition-colors">{item.t}</span>
                   </li>
                 ))}
               </ul>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 {['Students', 'Researchers', 'Enthusiasts', 'NGOs', 'Locals'].map(tag => (
-                  <span key={tag} className="bg-[var(--color-elephant-cream)] border border-[var(--color-elephant-border)] text-[10px] font-black uppercase px-4 py-2 rounded-full">{tag}</span>
+                  <span key={tag} className="bg-white/5 border border-white/10 text-[9px] font-black uppercase px-5 py-2.5 rounded-full text-white/40 tracking-widest">{tag}</span>
                 ))}
               </div>
-              <div className="pt-4">
-                <a href="mailto:asianelephantconservationcentr@gmail.com" className="bg-[var(--color-elephant-amber)] text-white px-10 py-4 rounded-xl font-bold inline-flex items-center gap-2 hover:bg-[var(--color-elephant-gold)] transition-all">
-                  🤝 Become a Volunteer
+              <div className="pt-8">
+                <a href="mailto:asianelephantconservationcentr@gmail.com" className="bg-[var(--color-elephant-gold)] text-[var(--color-elephant-coffee)] px-12 py-5 rounded-2xl font-black text-sm inline-flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[var(--color-elephant-gold)]/20 uppercase tracking-widest">
+                  🤝 Join The Network
                 </a>
               </div>
             </div>
-            <div className="space-y-6">
-              <div className="aspect-square rounded-[40px] overflow-hidden shadow-2xl relative group">
-                <img src="/assets/community.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Community" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)] via-transparent to-transparent opacity-80"></div>
+            <div className="space-y-8 relative">
+              <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-[var(--color-elephant-gold)]/5 rounded-full blur-[100px]"></div>
+              <div className="aspect-square rounded-[50px] overflow-hidden shadow-2xl relative group border border-white/10">
+                <img src="https://images.unsplash.com/photo-1549480017-d76466a4b7e8?w=800&q=80" className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" alt="Community" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)] via-transparent to-transparent opacity-90"></div>
                 <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 p-12 text-center">
-                  <h3 className="text-3xl font-bold text-white leading-tight">Friends of Elephants<br/>Coimbatore</h3>
-                  <p className="text-white/70 text-sm leading-relaxed max-w-xs">Launched at Sree Kumaran College with 120+ student volunteers. Bridging youth energy with conservation science.</p>
+                  <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 mb-4 animate-bounce">
+                    <Heart size={40} className="text-[var(--color-elephant-gold)]" fill="currentColor"/>
+                  </div>
+                  <h3 className="text-3xl font-black text-white leading-tight">120+ Active<br/>Volunteers</h3>
+                  <p className="text-white/50 text-xs font-black uppercase tracking-[0.2em]">Sree Kumaran College Chapter</p>
                 </div>
               </div>
-              <div className="bg-white border border-[var(--color-elephant-border)] rounded-3xl p-8 shadow-sm">
-                <h4 className="font-bold text-sm mb-6">Recent Programs</h4>
-                <div className="space-y-6">
+              <div className="bg-white/5 border border-white/10 rounded-[40px] p-10 shadow-2xl backdrop-blur-sm">
+                <h4 className="font-black text-xs uppercase tracking-widest text-[var(--color-elephant-gold)] mb-8">Engagement Log</h4>
+                <div className="space-y-8">
                   {[
-                    { d: "Mar 2025", t: "World Wildlife Day Eco Club — 150 students participated, quiz and awards" },
-                    { d: "Jan 2025", t: "Winter Nature Camp — Biodiversity awareness and climate sessions" },
-                    { d: "Aug 2024", t: "Friends of Elephants Launch — Sree Kumaran College, 120+ enrolled" }
+                    { d: "Mar 2025", t: "World Wildlife Day Eco Club — SREC Coimbatore" },
+                    { d: "Jan 2025", t: "Winter Nature Camp — Biodiversity Training" },
+                    { d: "Aug 2024", t: "Friends of Elephants Launch — District HQ" }
                   ].map((prog, i) => (
-                    <div key={i} className="flex gap-4 items-start">
-                      <span className="text-[var(--color-elephant-amber)] font-black text-[11px] uppercase tracking-tighter whitespace-nowrap mt-1">{prog.d}</span>
-                      <p className="text-xs text-[var(--color-elephant-muted)] font-medium leading-relaxed">{prog.t}</p>
+                    <div key={i} className="flex gap-6 items-start group">
+                      <span className="text-[var(--color-elephant-gold)] font-black text-[10px] uppercase tracking-widest whitespace-nowrap mt-1 group-hover:translate-x-1 transition-transform">[{prog.d}]</span>
+                      <p className="text-xs text-white/40 font-bold leading-relaxed group-hover:text-white transition-colors">{prog.t}</p>
                     </div>
                   ))}
                 </div>
@@ -622,28 +668,28 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Gallery Placeholder */}
-      <section id="gallery" className="py-24 bg-[var(--color-elephant-cream)]">
+      {/* Gallery */}
+      <section id="gallery" className="py-32 bg-[var(--color-elephant-coffee)] relative">
         <div className="container mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <div className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--color-elephant-amber)]">Media Gallery</div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold">Activities in Pictures</h2>
-            <p className="text-[var(--color-elephant-muted)] font-medium">Documenting our journey through field visits, training programs, and wildlife monitoring.</p>
+          <div className="text-center max-w-2xl mx-auto mb-20 space-y-6">
+            <div className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--color-elephant-gold)]">Institutional Media</div>
+            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-black text-white">Activities <span className="text-[var(--color-elephant-gold)] italic">In Focus</span></h2>
+            <p className="text-white/40 text-sm font-medium leading-relaxed">Documenting our journey through field visits, training programs, and wildlife monitoring across the Coimbatore Division.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { i: "🐘", t: "Elephant Cell Operations", d: "AI surveillance command centre", c: "from-[#2A5235] to-[#3D6B45]", lg: true },
-              { i: "🏆", t: "National Hackathon 2025", d: "36-hour innovation challenge", c: "from-[#3E2723] to-[#5C3D2E]" },
-              { i: "🌿", t: "Field Research & GIS", d: "Ground truthing · Corridor mapping", c: "from-[#1A4A2E] to-[#2D6A4F]" },
-              { i: "🎓", t: "Capacity Building", d: "BNPT & officer training sessions", c: "from-[#5C3D2E] to-[#7B4F2E]" },
-              { i: "🚂", t: "Railway AI Monitoring", d: "Madukkarai track surveillance", c: "from-[#0D3B2A] to-[#1A5E40]" }
+              { i: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80", t: "Elephant Cell HQ", d: "AI surveillance command centre", lg: true },
+              { i: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80", t: "National Hackathon", d: "36-hour innovation challenge" },
+              { i: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80", t: "Field Research & GIS", d: "Ground truthing & mapping" },
+              { i: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80", t: "Capacity Building", d: "BNPT & officer training" },
+              { i: "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=800&q=80", t: "Railway AI Monitoring", d: "Madukkarai track surveillance" }
             ].map((img, i) => (
-              <div key={i} className={`relative aspect-[4/3] rounded-3xl overflow-hidden group shadow-lg cursor-pointer ${img.lg ? 'md:col-span-2' : ''}`}>
-                <img src={i === 0 ? "/assets/tech.png" : i === 1 ? "/assets/community.png" : i === 2 ? "/assets/about.png" : "/assets/tech.png"} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={img.t} />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)] via-transparent to-transparent opacity-80"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <h4 className="text-lg font-bold text-white mb-1">{img.t}</h4>
-                  <p className="text-xs text-white/60 font-medium">{img.d}</p>
+              <div key={i} className={`relative aspect-[4/3] rounded-[40px] overflow-hidden group shadow-2xl cursor-pointer border border-white/10 ${img.lg ? 'md:col-span-2' : ''}`}>
+                <img src={img.i} className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000" alt={img.t} />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-elephant-coffee)] via-transparent to-transparent opacity-90"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-10 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                  <h4 className="text-xl font-black text-white mb-2 uppercase tracking-widest">{img.t}</h4>
+                  <p className="text-[10px] text-[var(--color-elephant-gold)] font-black uppercase tracking-[0.2em]">{img.d}</p>
                 </div>
               </div>
             ))}
