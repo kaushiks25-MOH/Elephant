@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FileText, Map as MapIcon, Search, Filter, Menu, X, MapPin, ShieldCheck, AlertTriangle, Mic, Home, BarChart3 } from 'lucide-react';
 import { fetchReports } from '../../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -90,14 +90,23 @@ export default function HqReports() {
 
       <div className="md:pl-64 flex-1 min-h-screen relative overflow-hidden">
         <div className="p-4 md:p-8 relative z-10 max-w-7xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-xl"
+          >
             <div>
               <div className="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--color-elephant-gold)] mb-1">Database</div>
               <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-black text-white tracking-tight">Sightings Log</h2>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-[#24150e] rounded-3xl shadow-2xl border border-white/5 overflow-hidden"
+          >
             <div className="p-5 border-b border-white/5 flex flex-col lg:flex-row gap-4 justify-between items-center bg-white/5">
               <div className="relative w-full lg:w-72">
                 <Search className="absolute left-3 top-2.5 text-white/30" size={18} />
@@ -124,56 +133,65 @@ export default function HqReports() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {loading ? (
-                    <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">Syncing HQ Database...</td></tr>
-                  ) : filteredReports.length === 0 ? (
-                    <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">No reports found.</td></tr>
-                  ) : (
-                    filteredReports.map(report => (
-                      <tr key={report.id} className="hover:bg-white/5 transition-colors group">
-                        <td className="p-5">
-                          <p className="text-xs text-white/60 font-medium">{new Date(report.created_at).toLocaleString()}</p>
-                          <span className={`mt-1 inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter ${report.report_type === 'CLEARANCE' ? 'bg-blue-600' : 'bg-green-700'}`}>{report.report_type}</span>
-                        </td>
-                        <td className="p-5">
-                          <div className="flex items-center gap-1.5 text-[11px] text-white/40 font-bold"><MapPin size={12} className="text-[var(--color-elephant-gold)]"/>{report.latitude?.toFixed(4)}, {report.longitude?.toFixed(4)}</div>
-                        </td>
-                        <td className="p-5">
-                          {report.report_type === 'SIGHTING' ? (
-                            <div className="space-y-1">
-                              <p className="text-sm font-bold text-white">{report.elephant_count} Elephants</p>
-                              <span className={`px-2 py-0.5 text-[8px] font-black rounded uppercase ${report.severity === 'HIGH' ? 'bg-red-600' : 'bg-orange-500'}`}>{report.severity}</span>
-                            </div>
-                          ) : (
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                {report.is_clear ? <ShieldCheck size={14} className="text-green-500"/> : <AlertTriangle size={14} className="text-orange-500"/>}
-                                <span className="text-xs font-bold">{report.is_clear ? 'Clear' : 'Active'}</span>
+                  <AnimatePresence mode="popLayout">
+                    {loading ? (
+                      <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">Syncing HQ Database...</td></tr>
+                    ) : filteredReports.length === 0 ? (
+                      <tr><td colSpan="5" className="p-8 text-center text-white/30 italic">No reports found.</td></tr>
+                    ) : (
+                      filteredReports.map((report, i) => (
+                        <motion.tr 
+                          key={report.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ delay: i * 0.03 }}
+                          className="hover:bg-white/5 transition-colors group"
+                        >
+                          <td className="p-5">
+                            <p className="text-xs text-white/60 font-medium">{new Date(report.created_at).toLocaleString()}</p>
+                            <span className={`mt-1 inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter ${report.report_type === 'CLEARANCE' ? 'bg-blue-600' : 'bg-green-700'}`}>{report.report_type}</span>
+                          </td>
+                          <td className="p-5">
+                            <div className="flex items-center gap-1.5 text-[11px] text-white/40 font-bold"><MapPin size={12} className="text-[var(--color-elephant-gold)]"/>{report.latitude?.toFixed(4)}, {report.longitude?.toFixed(4)}</div>
+                          </td>
+                          <td className="p-5">
+                            {report.report_type === 'SIGHTING' ? (
+                              <div className="space-y-1">
+                                <p className="text-sm font-bold text-white">{report.elephant_count} Elephants</p>
+                                <span className={`px-2 py-0.5 text-[8px] font-black rounded uppercase ${report.severity === 'HIGH' ? 'bg-red-600' : 'bg-orange-500'}`}>{report.severity}</span>
                               </div>
-                              {report.casualties > 0 && <p className="text-[10px] font-black text-red-500 uppercase tracking-widest">{report.casualties} Casualties</p>}
-                            </div>
-                          )}
-                        </td>
-                        <td className="p-5">
-                          {report.voice_url ? (
-                            <div className="flex items-center gap-3 bg-black/20 p-2 rounded-xl border border-white/5 w-fit">
-                              <Mic size={14} className="text-[var(--color-elephant-gold)] animate-pulse" />
-                              <audio src={getAPIUrl(report.voice_url)} controls className="h-8 w-40 accent-[var(--color-elephant-gold)]" />
-                            </div>
-                          ) : <span className="text-white/10 text-[10px] italic">No audio note</span>}
-                        </td>
-                        <td className="p-5 text-right">
-                          {report.image_url ? (
-                            <a href={getAPIUrl(report.image_url)} target="_blank" rel="noreferrer" className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all group-hover:bg-white/10">Proof</a>
-                          ) : <span className="text-white/10 text-xs italic">No Proof</span>}
-                        </td>
-                      </tr>
-                    ))
-                  )}
+                            ) : (
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                  {report.is_clear ? <ShieldCheck size={14} className="text-green-500"/> : <AlertTriangle size={14} className="text-orange-500"/>}
+                                  <span className="text-xs font-bold">{report.is_clear ? 'Clear' : 'Active'}</span>
+                                </div>
+                                {report.casualties > 0 && <p className="text-[10px] font-black text-red-500 uppercase tracking-widest">{report.casualties} Casualties</p>}
+                              </div>
+                            )}
+                          </td>
+                          <td className="p-5">
+                            {report.voice_url ? (
+                              <div className="flex items-center gap-3 bg-black/20 p-2 rounded-xl border border-white/5 w-fit">
+                                <Mic size={14} className="text-[var(--color-elephant-gold)] animate-pulse" />
+                                <audio src={getAPIUrl(report.voice_url)} controls className="h-8 w-40 accent-[var(--color-elephant-gold)]" />
+                              </div>
+                            ) : <span className="text-white/10 text-[10px] italic">No audio note</span>}
+                          </td>
+                          <td className="p-5 text-right">
+                            {report.image_url ? (
+                              <a href={getAPIUrl(report.image_url)} target="_blank" rel="noreferrer" className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all group-hover:bg-white/10">Proof</a>
+                            ) : <span className="text-white/10 text-xs italic">No Proof</span>}
+                          </td>
+                        </motion.tr>
+                      ))
+                    )}
+                  </AnimatePresence>
                 </tbody>
               </table>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
