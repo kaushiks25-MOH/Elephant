@@ -88,7 +88,7 @@ const StatItem = ({ num, lbl, target }) => {
 const Nav = ({ setIsMobileMenuOpen }) => (
   <nav className="sticky top-0 z-[1000] bg-[rgba(44,24,16,0.97)] backdrop-blur-xl px-4 md:px-10 flex items-center justify-between h-20 border-b border-[var(--color-elephant-gold)]/20 transition-all">
     <Link to="/" className="flex items-center gap-4">
-      <div className="w-14 h-14 bg-white rounded-full overflow-hidden flex items-center justify-center p-0.5 border-2 border-[var(--color-elephant-gold)]/40 shadow-lg">
+      <div className="w-14 h-14 bg-[#2C1810] rounded-full overflow-hidden flex items-center justify-center p-0.5 border-2 border-[var(--color-elephant-gold)]/40 shadow-lg">
         <img src="/logo.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
       </div>
       <div className="text-white">

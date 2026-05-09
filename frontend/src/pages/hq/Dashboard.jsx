@@ -149,7 +149,7 @@ export default function HqDashboard() {
 
       <div className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-[#1a0f0a] text-white flex-col shadow-2xl z-20 border-r border-white/10">
         <div className="p-6 border-b border-white/10 flex flex-col items-center gap-4 text-center">
-          <div className="bg-white p-1 rounded-full w-24 h-24 flex items-center justify-center shadow-xl border-2 border-[var(--color-elephant-gold)] overflow-hidden">
+          <div className="bg-[#1a0f0a] p-1 rounded-full w-24 h-24 flex items-center justify-center shadow-xl border-2 border-[var(--color-elephant-gold)]/40 overflow-hidden">
             <img src="/logo.png" alt="Logo" className="w-full h-full object-contain rounded-full" />
           </div>
           <div><h1 className="font-[family-name:var(--font-playfair)] font-bold text-xl leading-tight text-[var(--color-elephant-gold)]">AECRCMC</h1><p className="text-[10px] text-white/50 tracking-widest uppercase mt-0.5">HQ Dashboard</p></div>
@@ -237,32 +237,32 @@ export default function HqDashboard() {
                             </div>
                             
                             {report.report_type === 'SIGHTING' ? (
-                              <p className="font-bold text-base mb-1 text-black">{report.elephant_count} Elephants</p>
+                              <p className="font-bold text-base mb-1 text-white">{report.elephant_count} Elephants</p>
                             ) : (
                               <div className="mb-2">
-                                <p className="font-bold text-sm text-black flex items-center gap-1">
-                                  {report.is_clear ? <ShieldCheck size={14} className="text-green-600"/> : <AlertTriangle size={14} className="text-orange-600"/>}
+                                <p className="font-bold text-sm text-white flex items-center gap-1">
+                                  {report.is_clear ? <ShieldCheck size={14} className="text-green-400"/> : <AlertTriangle size={14} className="text-orange-400"/>}
                                   {report.is_clear ? 'Area Cleared' : 'Ongoing Conflict'}
                                 </p>
-                                {report.casualties > 0 && <p className="text-xs font-black text-red-600 uppercase mt-1">{report.casualties} Casualties Reported</p>}
+                                {report.casualties > 0 && <p className="text-xs font-black text-red-500 uppercase mt-1">{report.casualties} Casualties Reported</p>}
                               </div>
                             )}
 
-                            <p className="text-[10px] font-bold text-gray-400 mb-3 border-b pb-2 border-gray-100">{new Date(report.created_at).toLocaleString()}</p>
+                            <p className="text-[10px] font-bold text-white/40 mb-3 border-b pb-2 border-white/5">{new Date(report.created_at).toLocaleString()}</p>
                             
-                            {report.damage_desc && <p className="text-xs italic bg-gray-50 p-2 rounded-lg mb-3 text-gray-700 border-l-2 border-blue-500">Damage: {report.damage_desc}</p>}
-                            {report.notes && <p className="text-xs italic bg-gray-50 p-2 rounded-lg mb-3 text-gray-700 border-l-2 border-[var(--color-elephant-amber)]">"{report.notes}"</p>}
+                            {report.damage_desc && <p className="text-xs italic bg-white/5 p-2 rounded-lg mb-3 text-white/70 border-l-2 border-blue-500">Damage: {report.damage_desc}</p>}
+                            {report.notes && <p className="text-xs italic bg-white/5 p-2 rounded-lg mb-3 text-white/70 border-l-2 border-[var(--color-elephant-gold)]">"{report.notes}"</p>}
                             
                             {report.voice_url && (
-                              <div className="mt-3 p-2 bg-black/5 rounded-xl border border-black/5">
-                                <p className="text-[9px] font-bold uppercase text-gray-400 mb-1 flex items-center gap-1"><Mic size={10}/> Voice Note</p>
-                                <audio src={getAPIUrl(report.voice_url)} controls className="h-8 w-full accent-[var(--color-elephant-gold)]" />
+                              <div className="mt-3 p-2 bg-white/5 rounded-xl border border-white/5">
+                                <p className="text-[9px] font-bold uppercase text-white/40 mb-1 flex items-center gap-1"><Mic size={10}/> Voice Note</p>
+                                <audio src={getAPIUrl(report.voice_url)} controls className="h-8 w-full accent-[var(--color-elephant-gold)] brightness-75 invert" />
                               </div>
                             )}
 
                             {report.image_url && (
                               <div className="mt-3">
-                                <img src={getAPIUrl(report.image_url)} alt="Proof" className="w-full h-24 object-cover rounded-lg shadow-sm border border-gray-100" />
+                                <img src={getAPIUrl(report.image_url)} alt="Proof" className="w-full h-24 object-cover rounded-lg shadow-sm border border-white/10" />
                               </div>
                             )}
                           </div>
