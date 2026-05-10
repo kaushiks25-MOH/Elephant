@@ -55,7 +55,7 @@ export async function submitReport({
   const { data, error } = await supabase
     .from('reports')
     .insert({
-      user_id: '00000000-0000-0000-0000-000000000000',
+      user_id: null,
       elephant_count: count || 0,
       severity: severity || 'LOW',
       notes: notes,
