@@ -180,9 +180,25 @@ export default function HqReports() {
                             ) : <span className="text-white/10 text-[10px] italic">No audio note</span>}
                           </td>
                           <td className="p-5 text-right">
-                            {report.image_url ? (
-                              <a href={getAPIUrl(report.image_url)} target="_blank" rel="noreferrer" className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all group-hover:bg-white/10">Proof</a>
-                            ) : <span className="text-white/10 text-xs italic">No Proof</span>}
+                            <div className="flex justify-end gap-2 flex-wrap">
+                              {report.image_urls && report.image_urls.length > 0 ? (
+                                report.image_urls.map((url, idx) => (
+                                  <a 
+                                    key={idx}
+                                    href={getAPIUrl(url)} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-[9px] font-black uppercase px-2 py-1 rounded-lg transition-all group-hover:bg-white/10"
+                                  >
+                                    Proof {idx + 1}
+                                  </a>
+                                ))
+                              ) : report.image_url ? (
+                                <a href={getAPIUrl(report.image_url)} target="_blank" rel="noreferrer" className="inline-block bg-white/5 border border-white/10 hover:border-[var(--color-elephant-gold)] text-white text-[9px] font-black uppercase px-3 py-1.5 rounded-lg transition-all group-hover:bg-white/10">Proof</a>
+                              ) : (
+                                <span className="text-white/10 text-xs italic">No Proof</span>
+                              )}
+                            </div>
                           </td>
                         </motion.tr>
                       ))

@@ -260,7 +260,19 @@ export default function HqDashboard() {
                               </div>
                             )}
 
-                            {report.image_url && (
+                            {report.image_urls && report.image_urls.length > 0 ? (
+                              <div className="mt-3 grid grid-cols-3 gap-1">
+                                {report.image_urls.map((url, i) => (
+                                  <img 
+                                    key={i}
+                                    src={getAPIUrl(url)} 
+                                    alt={`Proof ${i+1}`} 
+                                    className="w-full h-12 object-cover rounded shadow-sm border border-white/10 hover:scale-105 transition-transform cursor-pointer" 
+                                    onClick={() => window.open(getAPIUrl(url), '_blank')}
+                                  />
+                                ))}
+                              </div>
+                            ) : report.image_url && (
                               <div className="mt-3">
                                 <img src={getAPIUrl(report.image_url)} alt="Proof" className="w-full h-24 object-cover rounded-lg shadow-sm border border-white/10" />
                               </div>
