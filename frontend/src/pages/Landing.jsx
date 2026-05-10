@@ -229,9 +229,6 @@ export default function Landing() {
               </p>
               
               <div className="flex flex-wrap gap-6 pt-10">
-                <Link to="/report" className="bg-[var(--color-elephant-gold)] text-[var(--color-elephant-coffee)] px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[var(--color-elephant-gold)]/20">
-                  Field Report Portal
-                </Link>
                 <Link to="/dashboard" className="bg-white/5 border border-white/10 backdrop-blur-md text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
                   Command Centre
                 </Link>
