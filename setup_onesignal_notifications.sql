@@ -31,7 +31,7 @@ BEGIN
     ),
     body := jsonb_build_object(
       'app_id', app_id,
-      'included_segments', ARRAY['Total Subscriptions'],
+      'included_segments', ARRAY['Subscribed Users'],
       'headings', jsonb_build_object('en', notification_title),
       'contents', jsonb_build_object('en', notification_body),
       'data', jsonb_build_object(

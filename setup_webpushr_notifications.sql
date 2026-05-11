@@ -1,24 +1,7 @@
--- 1. Add range column to reports table if it doesn't exist
-ALTER TABLE public.reports ADD COLUMN IF NOT EXISTS range TEXT;
+-- Enable pg_net extension if not already enabled
+CREATE EXTENSION IF NOT EXISTS pg_net;
 
--- 2. Add Detailed Reporting Fields
-ALTER TABLE public.reports 
-ADD COLUMN IF NOT EXISTS officer_name TEXT,
-ADD COLUMN IF NOT EXISTS designation TEXT,
-ADD COLUMN IF NOT EXISTS team_members TEXT,
-ADD COLUMN IF NOT EXISTS bull_count INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS makhna_count INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS male_group_count INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS female_group_count INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS female_calf_count INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS single_female_count INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS is_damage_caused BOOLEAN DEFAULT FALSE,
-ADD COLUMN IF NOT EXISTS damage_type TEXT,
-ADD COLUMN IF NOT EXISTS chase_start_time TIME,
-ADD COLUMN IF NOT EXISTS chase_result TEXT,
-ADD COLUMN IF NOT EXISTS remarks TEXT;
-
--- 3. Update Webpushr Notification Function to support MANUAL alerts
+-- Function to send Webpushr Notification
 CREATE OR REPLACE FUNCTION public.send_webpushr_notification()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -35,6 +18,7 @@ BEGIN
     notification_title := '✅ Area Cleared';
     notification_body := 'The area at ' || NEW.latitude || ', ' || NEW.longitude || ' has been reported as CLEAR.';
   ELSIF NEW.report_type = 'MANUAL' THEN
+    -- For manual alerts, we expect the title to be in notes (formatted as Title|Body)
     IF NEW.notes LIKE '%|%' THEN
         notification_title := split_part(NEW.notes, '|', 1);
         notification_body := split_part(NEW.notes, '|', 2);
@@ -47,7 +31,7 @@ BEGIN
     notification_body := 'A new report has been submitted.';
   END IF;
 
-  -- Send request to Webpushr
+  -- Send request to Webpushr (Sidewide Broadcast)
   PERFORM net.http_post(
     url := 'https://api.webpushr.com/v1/notifications/sidewide',
     headers := jsonb_build_object(
@@ -58,17 +42,7 @@ BEGIN
     body := jsonb_build_object(
       'title', notification_title,
       'message', notification_body,
-      'target_url', 'https://elephant-conflict-monitor.vercel.app'
-    )
-  );
-
-  -- 4. Send request to WhatsApp Webhook (Optional)
-  PERFORM net.http_post(
-    url := 'https://hook.us1.make.com/placeholder-whatsapp-webhook',
-    headers := jsonb_build_object('Content-Type', 'application/json'),
-    body := jsonb_build_object(
-      'message', notification_title || ': ' || notification_body,
-      'group_link', 'https://chat.whatsapp.com/ETSAf9K9oUn1bPoY34L74Z'
+      'target_url', 'https://elephant-conflict-monitor.vercel.app' -- Update if needed
     )
   );
 
@@ -76,10 +50,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Update Trigger
+-- Update Trigger to use Webpushr function
 DROP TRIGGER IF EXISTS on_report_inserted_notification ON public.reports;
 CREATE TRIGGER on_report_inserted_notification
 AFTER INSERT ON public.reports
 FOR EACH ROW
 EXECUTE FUNCTION public.send_webpushr_notification();
-
