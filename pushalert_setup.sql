@@ -1,3 +1,6 @@
+-- 0. Ensure pg_net is enabled
+CREATE EXTENSION IF NOT EXISTS pg_net;
+
 -- 1. Create the PushAlert Notification Function
 CREATE OR REPLACE FUNCTION public.send_pushalert_notification()
 RETURNS TRIGGER AS $$
@@ -30,7 +33,7 @@ BEGIN
   -- Send request via pg_net to PushAlert API
   PERFORM
     net.http_post(
-      url := 'https://pushalert.co/api/v1/send',
+      url := 'https://pushalert.co/api/v1/send'::text,
       headers := jsonb_build_object(
         'UR-API-Key', pushalert_key,
         'Content-Type', 'application/x-www-form-urlencoded'
