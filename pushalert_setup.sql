@@ -31,19 +31,27 @@ BEGIN
   END IF;
 
   -- Send request via pg_net to PushAlert API
-  PERFORM
-    net.http_post(
-      url := 'https://pushalert.co/api/v1/send'::text,
-      headers := jsonb_build_object(
-        'UR-API-Key', pushalert_key,
-        'Content-Type', 'application/x-www-form-urlencoded'
-      ),
-      body := (
-        'title=' || urlencode(notification_title) || 
-        '&message=' || urlencode(notification_message) || 
-        '&url=' || urlencode(target_url)
-      )::bytea
-    );
+  -- Diagnostic signature: text (url), jsonb (body), jsonb (params), jsonb (headers), integer (timeout)
+  BEGIN
+    PERFORM
+      net.http_post(
+        'https://pushalert.co/api/v1/send'::text,
+        jsonb_build_object(
+          'title', notification_title,
+          'message', notification_message,
+          'url', target_url
+        ),
+        '{}'::jsonb,
+        jsonb_build_object(
+          'UR-API-Key', pushalert_key,
+          'Content-Type', 'application/json'
+        ),
+        1000 -- timeout
+      );
+  EXCEPTION WHEN OTHERS THEN
+    -- Log error but allow the report to be saved
+    RAISE WARNING 'PushAlert Notification Failed: %', SQLERRM;
+  END;
 
   RETURN NEW;
 END;
